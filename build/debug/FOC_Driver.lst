@@ -1,0 +1,1629 @@
+ARM GAS  /tmp/cchbRFak.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"FOC_Driver.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/FOC_Driver.c"
+  20              		.section	.text.FOC_Driver_Init,"ax",%progbits
+  21              		.align	1
+  22              		.global	FOC_Driver_Init
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	FOC_Driver_Init:
+  28              	.LVL0:
+  29              	.LFB160:
+   1:Core/Src/FOC_Driver.c **** // <<---------------------------------------------->>
+   2:Core/Src/FOC_Driver.c **** // <<-------------Kütüphane Tanımlamaları---------->>
+   3:Core/Src/FOC_Driver.c **** // <<---------------------------------------------->>
+   4:Core/Src/FOC_Driver.c **** 
+   5:Core/Src/FOC_Driver.c **** #include "FOC_Driver.h"
+   6:Core/Src/FOC_Driver.c **** #include "stm32g4xx_ll_cordic.h" // LL kütüphanesini kullandığını varsayıyorum
+   7:Core/Src/FOC_Driver.c **** #include "math.h"
+   8:Core/Src/FOC_Driver.c **** 
+   9:Core/Src/FOC_Driver.c **** // <<---------------------------------------------->>
+  10:Core/Src/FOC_Driver.c **** // <<-------------Fonksiyon Tanımlamaları---------->>
+  11:Core/Src/FOC_Driver.c **** // <<---------------------------------------------->>
+  12:Core/Src/FOC_Driver.c **** 
+  13:Core/Src/FOC_Driver.c **** void FOC_Driver_Init(FOC_Handle_t *pHandle){
+  30              		.loc 1 13 44 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  14:Core/Src/FOC_Driver.c ****     // Girişleri sıfırla
+  15:Core/Src/FOC_Driver.c ****     pHandle->input.i_a_meas = 0.0f;
+  35              		.loc 1 15 5 view .LVU1
+  36              		.loc 1 15 29 is_stmt 0 view .LVU2
+  37 0000 0023     		movs	r3, #0
+  38 0002 C363     		str	r3, [r0, #60]	@ float
+  16:Core/Src/FOC_Driver.c ****     pHandle->input.i_b_meas = 0.0f;
+  39              		.loc 1 16 5 is_stmt 1 view .LVU3
+  40              		.loc 1 16 29 is_stmt 0 view .LVU4
+  41 0004 0364     		str	r3, [r0, #64]	@ float
+  17:Core/Src/FOC_Driver.c ****     pHandle->input.w_rad_s = 0.0f;
+ARM GAS  /tmp/cchbRFak.s 			page 2
+
+
+  42              		.loc 1 17 5 is_stmt 1 view .LVU5
+  43              		.loc 1 17 28 is_stmt 0 view .LVU6
+  44 0006 4364     		str	r3, [r0, #68]	@ float
+  18:Core/Src/FOC_Driver.c ****     pHandle->input.Electrical_Angle_rad = 0.0f;
+  45              		.loc 1 18 5 is_stmt 1 view .LVU7
+  46              		.loc 1 18 41 is_stmt 0 view .LVU8
+  47 0008 8364     		str	r3, [r0, #72]	@ float
+  19:Core/Src/FOC_Driver.c ****     pHandle->input.T_mot_ref = 0.0f;
+  48              		.loc 1 19 5 is_stmt 1 view .LVU9
+  49              		.loc 1 19 30 is_stmt 0 view .LVU10
+  50 000a C364     		str	r3, [r0, #76]	@ float
+  20:Core/Src/FOC_Driver.c ****     pHandle->input.U_bat = 0.0f;
+  51              		.loc 1 20 5 is_stmt 1 view .LVU11
+  52              		.loc 1 20 26 is_stmt 0 view .LVU12
+  53 000c 0365     		str	r3, [r0, #80]	@ float
+  21:Core/Src/FOC_Driver.c ****     
+  22:Core/Src/FOC_Driver.c ****     // State'leri sıfırla
+  23:Core/Src/FOC_Driver.c ****     pHandle->state.i_q_ref = 0.0f;
+  54              		.loc 1 23 5 is_stmt 1 view .LVU13
+  55              		.loc 1 23 28 is_stmt 0 view .LVU14
+  56 000e 4365     		str	r3, [r0, #84]	@ float
+  24:Core/Src/FOC_Driver.c ****     pHandle->state.i_d_ref = 0.0f;
+  57              		.loc 1 24 5 is_stmt 1 view .LVU15
+  58              		.loc 1 24 28 is_stmt 0 view .LVU16
+  59 0010 8365     		str	r3, [r0, #88]	@ float
+  25:Core/Src/FOC_Driver.c ****     pHandle->state.i_alpha = 0.0f;
+  60              		.loc 1 25 5 is_stmt 1 view .LVU17
+  61              		.loc 1 25 28 is_stmt 0 view .LVU18
+  62 0012 C365     		str	r3, [r0, #92]	@ float
+  26:Core/Src/FOC_Driver.c ****     pHandle->state.i_beta = 0.0f;
+  63              		.loc 1 26 5 is_stmt 1 view .LVU19
+  64              		.loc 1 26 27 is_stmt 0 view .LVU20
+  65 0014 0366     		str	r3, [r0, #96]	@ float
+  27:Core/Src/FOC_Driver.c ****     pHandle->state.i_d = 0.0f;
+  66              		.loc 1 27 5 is_stmt 1 view .LVU21
+  67              		.loc 1 27 24 is_stmt 0 view .LVU22
+  68 0016 8366     		str	r3, [r0, #104]	@ float
+  28:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = 0.0f;
+  69              		.loc 1 28 5 is_stmt 1 view .LVU23
+  70              		.loc 1 28 24 is_stmt 0 view .LVU24
+  71 0018 4366     		str	r3, [r0, #100]	@ float
+  29:Core/Src/FOC_Driver.c ****     pHandle->state.u_d_decoupling = 0.0f;
+  72              		.loc 1 29 5 is_stmt 1 view .LVU25
+  73              		.loc 1 29 35 is_stmt 0 view .LVU26
+  74 001a C366     		str	r3, [r0, #108]	@ float
+  30:Core/Src/FOC_Driver.c ****     pHandle->state.u_q_decoupling = 0.0f;
+  75              		.loc 1 30 5 is_stmt 1 view .LVU27
+  76              		.loc 1 30 35 is_stmt 0 view .LVU28
+  77 001c 0367     		str	r3, [r0, #112]	@ float
+  31:Core/Src/FOC_Driver.c ****     pHandle->state.d_q_max_voltage = 0.0f;
+  78              		.loc 1 31 5 is_stmt 1 view .LVU29
+  79              		.loc 1 31 36 is_stmt 0 view .LVU30
+  80 001e 4367     		str	r3, [r0, #116]	@ float
+  32:Core/Src/FOC_Driver.c ****     pHandle->state.i_d_memory = 0.0f;
+  81              		.loc 1 32 5 is_stmt 1 view .LVU31
+  82              		.loc 1 32 31 is_stmt 0 view .LVU32
+  83 0020 8367     		str	r3, [r0, #120]	@ float
+ARM GAS  /tmp/cchbRFak.s 			page 3
+
+
+  33:Core/Src/FOC_Driver.c ****     pHandle->state.i_q_memory = 0.0f;
+  84              		.loc 1 33 5 is_stmt 1 view .LVU33
+  85              		.loc 1 33 31 is_stmt 0 view .LVU34
+  86 0022 C367     		str	r3, [r0, #124]	@ float
+  34:Core/Src/FOC_Driver.c ****     pHandle->state.u_d = 0.0f;
+  87              		.loc 1 34 5 is_stmt 1 view .LVU35
+  88              		.loc 1 34 24 is_stmt 0 view .LVU36
+  89 0024 C0F88030 		str	r3, [r0, #128]	@ float
+  35:Core/Src/FOC_Driver.c ****     pHandle->state.u_q = 0.0f;
+  90              		.loc 1 35 5 is_stmt 1 view .LVU37
+  91              		.loc 1 35 24 is_stmt 0 view .LVU38
+  92 0028 C0F88430 		str	r3, [r0, #132]	@ float
+  36:Core/Src/FOC_Driver.c ****     pHandle->state.u_x = 0.0f;
+  93              		.loc 1 36 5 is_stmt 1 view .LVU39
+  94              		.loc 1 36 24 is_stmt 0 view .LVU40
+  95 002c C0F88830 		str	r3, [r0, #136]	@ float
+  37:Core/Src/FOC_Driver.c ****     pHandle->state.u_y = 0.0f;
+  96              		.loc 1 37 5 is_stmt 1 view .LVU41
+  97              		.loc 1 37 24 is_stmt 0 view .LVU42
+  98 0030 C0F88C30 		str	r3, [r0, #140]	@ float
+  38:Core/Src/FOC_Driver.c ****     pHandle->state.u_ref_a = 0.0f;
+  99              		.loc 1 38 5 is_stmt 1 view .LVU43
+ 100              		.loc 1 38 28 is_stmt 0 view .LVU44
+ 101 0034 C0F89030 		str	r3, [r0, #144]	@ float
+  39:Core/Src/FOC_Driver.c ****     pHandle->state.u_ref_b = 0.0f;
+ 102              		.loc 1 39 5 is_stmt 1 view .LVU45
+ 103              		.loc 1 39 28 is_stmt 0 view .LVU46
+ 104 0038 C0F89430 		str	r3, [r0, #148]	@ float
+  40:Core/Src/FOC_Driver.c ****     pHandle->state.u_ref_c = 0.0f;
+ 105              		.loc 1 40 5 is_stmt 1 view .LVU47
+ 106              		.loc 1 40 28 is_stmt 0 view .LVU48
+ 107 003c C0F89830 		str	r3, [r0, #152]	@ float
+  41:Core/Src/FOC_Driver.c ****     
+  42:Core/Src/FOC_Driver.c ****     // Çıkışları sıfırla
+  43:Core/Src/FOC_Driver.c ****     pHandle->output.duty_a = 0.0f;
+ 108              		.loc 1 43 5 is_stmt 1 view .LVU49
+ 109              		.loc 1 43 28 is_stmt 0 view .LVU50
+ 110 0040 C0F89C30 		str	r3, [r0, #156]	@ float
+  44:Core/Src/FOC_Driver.c ****     pHandle->output.duty_b = 0.0f;
+ 111              		.loc 1 44 5 is_stmt 1 view .LVU51
+ 112              		.loc 1 44 28 is_stmt 0 view .LVU52
+ 113 0044 C0F8A030 		str	r3, [r0, #160]	@ float
+  45:Core/Src/FOC_Driver.c ****     pHandle->output.duty_c = 0.0f;
+ 114              		.loc 1 45 5 is_stmt 1 view .LVU53
+ 115              		.loc 1 45 28 is_stmt 0 view .LVU54
+ 116 0048 C0F8A430 		str	r3, [r0, #164]	@ float
+  46:Core/Src/FOC_Driver.c **** }
+ 117              		.loc 1 46 1 view .LVU55
+ 118 004c 7047     		bx	lr
+ 119              		.cfi_endproc
+ 120              	.LFE160:
+ 122              		.section	.text.FOC_Torq_Reference_Transform,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	FOC_Torq_Reference_Transform
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ARM GAS  /tmp/cchbRFak.s 			page 4
+
+
+ 129              	FOC_Torq_Reference_Transform:
+ 130              	.LVL1:
+ 131              	.LFB162:
+  47:Core/Src/FOC_Driver.c **** 
+  48:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+  49:Core/Src/FOC_Driver.c **** 
+  50:Core/Src/FOC_Driver.c **** void FOC_Clark_Park_Transform(FOC_Handle_t *pHandle){
+  51:Core/Src/FOC_Driver.c ****     float i_a = pHandle->input.i_a_meas;
+  52:Core/Src/FOC_Driver.c ****     float i_b = pHandle->input.i_b_meas;
+  53:Core/Src/FOC_Driver.c ****     float alpha_rad = pHandle->input.Electrical_Angle_rad;
+  54:Core/Src/FOC_Driver.c ****     float sin_val, cos_val;
+  55:Core/Src/FOC_Driver.c **** 
+  56:Core/Src/FOC_Driver.c ****     // Clark Dönüşümü
+  57:Core/Src/FOC_Driver.c ****     pHandle->state.i_alpha = i_a;
+  58:Core/Src/FOC_Driver.c ****     pHandle->state.i_beta = (0.5773502f) * (i_a + 2.0f * i_b); 
+  59:Core/Src/FOC_Driver.c **** 
+  60:Core/Src/FOC_Driver.c ****     // Park Dönüşümü
+  61:Core/Src/FOC_Driver.c ****     FOC_G4_Cos_Sin_Calculate(alpha_rad, &cos_val, &sin_val);
+  62:Core/Src/FOC_Driver.c **** 
+  63:Core/Src/FOC_Driver.c ****     pHandle->state.i_d =  (pHandle->state.i_alpha * cos_val) + (pHandle->state.i_beta * sin_val);
+  64:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = -(pHandle->state.i_alpha * sin_val) + (pHandle->state.i_beta * cos_val);
+  65:Core/Src/FOC_Driver.c **** }   
+  66:Core/Src/FOC_Driver.c **** 
+  67:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+  68:Core/Src/FOC_Driver.c **** 
+  69:Core/Src/FOC_Driver.c **** void FOC_Torq_Reference_Transform(FOC_Handle_t *pHandle){
+ 132              		.loc 1 69 57 is_stmt 1 view -0
+ 133              		.cfi_startproc
+ 134              		@ args = 0, pretend = 0, frame = 0
+ 135              		@ frame_needed = 0, uses_anonymous_args = 0
+ 136              		@ link register save eliminated.
+  70:Core/Src/FOC_Driver.c ****     float I_s_max = pHandle->config.I_s_max;
+ 137              		.loc 1 70 5 view .LVU57
+ 138              		.loc 1 70 11 is_stmt 0 view .LVU58
+ 139 0000 D0ED086A 		vldr.32	s13, [r0, #32]
+ 140              	.LVL2:
+  71:Core/Src/FOC_Driver.c ****     float T_mot_ref = pHandle->input.T_mot_ref;
+ 141              		.loc 1 71 5 is_stmt 1 view .LVU59
+ 142              		.loc 1 71 11 is_stmt 0 view .LVU60
+ 143 0004 90ED137A 		vldr.32	s14, [r0, #76]
+ 144              	.LVL3:
+  72:Core/Src/FOC_Driver.c ****     float pole_pairs = (float)pHandle->config.pole_pairs;
+ 145              		.loc 1 72 5 is_stmt 1 view .LVU61
+ 146              		.loc 1 72 46 is_stmt 0 view .LVU62
+ 147 0008 0378     		ldrb	r3, [r0]	@ zero_extendqisi2
+ 148 000a 07EE903A 		vmov	s15, r3	@ int
+ 149              		.loc 1 72 11 view .LVU63
+ 150 000e F8EE677A 		vcvt.f32.u32	s15, s15
+ 151              	.LVL4:
+  73:Core/Src/FOC_Driver.c ****     float flux_linkage = pHandle->config.flux_linkage;
+ 152              		.loc 1 73 5 is_stmt 1 view .LVU64
+ 153              		.loc 1 73 11 is_stmt 0 view .LVU65
+ 154 0012 90ED046A 		vldr.32	s12, [r0, #16]
+ 155              	.LVL5:
+  74:Core/Src/FOC_Driver.c **** 
+  75:Core/Src/FOC_Driver.c ****     // Torktan akıma geçiş: Iq_ref = (2/3) * (T_ref / (PP * Flux))
+  76:Core/Src/FOC_Driver.c ****     pHandle->state.i_q_ref = (T_mot_ref * 2.0f) / (3.0f * pole_pairs * flux_linkage);
+ARM GAS  /tmp/cchbRFak.s 			page 5
+
+
+ 156              		.loc 1 76 5 is_stmt 1 view .LVU66
+ 157              		.loc 1 76 41 is_stmt 0 view .LVU67
+ 158 0016 37EE077A 		vadd.f32	s14, s14, s14
+ 159              	.LVL6:
+ 160              		.loc 1 76 57 view .LVU68
+ 161 001a F0EE085A 		vmov.f32	s11, #3.0e+0
+ 162 001e 67EEA57A 		vmul.f32	s15, s15, s11
+ 163              	.LVL7:
+ 164              		.loc 1 76 70 view .LVU69
+ 165 0022 67EE867A 		vmul.f32	s15, s15, s12
+ 166              		.loc 1 76 49 view .LVU70
+ 167 0026 87EE276A 		vdiv.f32	s12, s14, s15
+ 168              	.LVL8:
+ 169              		.loc 1 76 28 view .LVU71
+ 170 002a 80ED156A 		vstr.32	s12, [r0, #84]
+  77:Core/Src/FOC_Driver.c ****     pHandle->state.i_d_ref = 0.0f; // Manyetik akı zayıflatma (Flux Weakening) yoksa 0
+ 171              		.loc 1 77 5 is_stmt 1 view .LVU72
+ 172              		.loc 1 77 28 is_stmt 0 view .LVU73
+ 173 002e 0023     		movs	r3, #0
+ 174              	.LVL9:
+ 175              		.loc 1 77 28 view .LVU74
+ 176 0030 8365     		str	r3, [r0, #88]	@ float
+  78:Core/Src/FOC_Driver.c **** 
+  79:Core/Src/FOC_Driver.c ****     // Akım Limitleme
+  80:Core/Src/FOC_Driver.c ****     if(pHandle->state.i_q_ref > I_s_max){
+ 177              		.loc 1 80 5 is_stmt 1 view .LVU75
+ 178              		.loc 1 80 7 is_stmt 0 view .LVU76
+ 179 0032 B4EEE66A 		vcmpe.f32	s12, s13
+ 180 0036 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 181 003a 02DD     		ble	.L9
+  81:Core/Src/FOC_Driver.c ****         pHandle->state.i_q_ref = I_s_max;
+ 182              		.loc 1 81 9 is_stmt 1 view .LVU77
+ 183              		.loc 1 81 32 is_stmt 0 view .LVU78
+ 184 003c C0ED156A 		vstr.32	s13, [r0, #84]
+ 185 0040 7047     		bx	lr
+ 186              	.L9:
+  82:Core/Src/FOC_Driver.c ****     }
+  83:Core/Src/FOC_Driver.c ****     else if(pHandle->state.i_q_ref < -I_s_max){
+ 187              		.loc 1 83 10 is_stmt 1 view .LVU79
+ 188              		.loc 1 83 38 is_stmt 0 view .LVU80
+ 189 0042 F1EE666A 		vneg.f32	s13, s13
+ 190              	.LVL10:
+ 191              		.loc 1 83 12 view .LVU81
+ 192 0046 B4EEE66A 		vcmpe.f32	s12, s13
+ 193 004a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 194 004e 01D5     		bpl	.L2
+  84:Core/Src/FOC_Driver.c ****         pHandle->state.i_q_ref = -I_s_max;
+ 195              		.loc 1 84 9 is_stmt 1 view .LVU82
+ 196              		.loc 1 84 32 is_stmt 0 view .LVU83
+ 197 0050 C0ED156A 		vstr.32	s13, [r0, #84]
+ 198              	.L2:
+  85:Core/Src/FOC_Driver.c ****     }
+  86:Core/Src/FOC_Driver.c **** }
+ 199              		.loc 1 86 1 view .LVU84
+ 200 0054 7047     		bx	lr
+ 201              		.cfi_endproc
+ 202              	.LFE162:
+ARM GAS  /tmp/cchbRFak.s 			page 6
+
+
+ 204              		.section	.text.FOC_Voltage_Decoupling,"ax",%progbits
+ 205              		.align	1
+ 206              		.global	FOC_Voltage_Decoupling
+ 207              		.syntax unified
+ 208              		.thumb
+ 209              		.thumb_func
+ 211              	FOC_Voltage_Decoupling:
+ 212              	.LVL11:
+ 213              	.LFB163:
+  87:Core/Src/FOC_Driver.c **** 
+  88:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+  89:Core/Src/FOC_Driver.c **** 
+  90:Core/Src/FOC_Driver.c **** void FOC_Voltage_Decoupling(FOC_Handle_t *pHandle){
+ 214              		.loc 1 90 51 is_stmt 1 view -0
+ 215              		.cfi_startproc
+ 216              		@ args = 0, pretend = 0, frame = 0
+ 217              		@ frame_needed = 0, uses_anonymous_args = 0
+ 218              		@ link register save eliminated.
+  91:Core/Src/FOC_Driver.c ****     float w_rad_s = pHandle->input.w_rad_s;
+ 219              		.loc 1 91 5 view .LVU86
+ 220              		.loc 1 91 11 is_stmt 0 view .LVU87
+ 221 0000 D0ED116A 		vldr.32	s13, [r0, #68]
+ 222              	.LVL12:
+  92:Core/Src/FOC_Driver.c ****     float L_d = pHandle->config.L_d;
+ 223              		.loc 1 92 5 is_stmt 1 view .LVU88
+ 224              		.loc 1 92 11 is_stmt 0 view .LVU89
+ 225 0004 D0ED027A 		vldr.32	s15, [r0, #8]
+ 226              	.LVL13:
+  93:Core/Src/FOC_Driver.c ****     float L_q = pHandle->config.L_q;
+ 227              		.loc 1 93 5 is_stmt 1 view .LVU90
+ 228              		.loc 1 93 11 is_stmt 0 view .LVU91
+ 229 0008 90ED037A 		vldr.32	s14, [r0, #12]
+ 230              	.LVL14:
+  94:Core/Src/FOC_Driver.c ****     float flux_linkage = pHandle->config.flux_linkage;
+ 231              		.loc 1 94 5 is_stmt 1 view .LVU92
+ 232              		.loc 1 94 11 is_stmt 0 view .LVU93
+ 233 000c 90ED046A 		vldr.32	s12, [r0, #16]
+ 234              	.LVL15:
+  95:Core/Src/FOC_Driver.c ****     float i_d = pHandle->state.i_d;
+ 235              		.loc 1 95 5 is_stmt 1 view .LVU94
+ 236              		.loc 1 95 11 is_stmt 0 view .LVU95
+ 237 0010 D0ED1A5A 		vldr.32	s11, [r0, #104]
+ 238              	.LVL16:
+  96:Core/Src/FOC_Driver.c ****     float i_q = pHandle->state.i_q;
+ 239              		.loc 1 96 5 is_stmt 1 view .LVU96
+ 240              		.loc 1 96 11 is_stmt 0 view .LVU97
+ 241 0014 90ED195A 		vldr.32	s10, [r0, #100]
+ 242              	.LVL17:
+  97:Core/Src/FOC_Driver.c **** 
+  98:Core/Src/FOC_Driver.c ****     // Cross-coupling terimlerini hesapla
+  99:Core/Src/FOC_Driver.c ****     pHandle->state.u_d_decoupling = -w_rad_s * L_q * i_q;
+ 243              		.loc 1 99 5 is_stmt 1 view .LVU98
+ 244              		.loc 1 99 46 is_stmt 0 view .LVU99
+ 245 0018 26EEC77A 		vnmul.f32	s14, s13, s14
+ 246              	.LVL18:
+ 247              		.loc 1 99 52 view .LVU100
+ 248 001c 27EE057A 		vmul.f32	s14, s14, s10
+ARM GAS  /tmp/cchbRFak.s 			page 7
+
+
+ 249              		.loc 1 99 35 view .LVU101
+ 250 0020 80ED1B7A 		vstr.32	s14, [r0, #108]
+ 100:Core/Src/FOC_Driver.c ****     pHandle->state.u_q_decoupling =  w_rad_s * (L_d * i_d + flux_linkage);
+ 251              		.loc 1 100 5 is_stmt 1 view .LVU102
+ 252              		.loc 1 100 53 is_stmt 0 view .LVU103
+ 253 0024 67EEA57A 		vmul.f32	s15, s15, s11
+ 254              	.LVL19:
+ 255              		.loc 1 100 59 view .LVU104
+ 256 0028 77EE867A 		vadd.f32	s15, s15, s12
+ 257              		.loc 1 100 46 view .LVU105
+ 258 002c 67EEA67A 		vmul.f32	s15, s15, s13
+ 259              		.loc 1 100 35 view .LVU106
+ 260 0030 C0ED1C7A 		vstr.32	s15, [r0, #112]
+ 101:Core/Src/FOC_Driver.c **** }
+ 261              		.loc 1 101 1 view .LVU107
+ 262 0034 7047     		bx	lr
+ 263              		.cfi_endproc
+ 264              	.LFE163:
+ 266              		.section	.text.FOC_Max_Voltage,"ax",%progbits
+ 267              		.align	1
+ 268              		.global	FOC_Max_Voltage
+ 269              		.syntax unified
+ 270              		.thumb
+ 271              		.thumb_func
+ 273              	FOC_Max_Voltage:
+ 274              	.LVL20:
+ 275              	.LFB164:
+ 102:Core/Src/FOC_Driver.c **** 
+ 103:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+ 104:Core/Src/FOC_Driver.c **** 
+ 105:Core/Src/FOC_Driver.c **** void FOC_Max_Voltage(FOC_Handle_t *pHandle){
+ 276              		.loc 1 105 44 is_stmt 1 view -0
+ 277              		.cfi_startproc
+ 278              		@ args = 0, pretend = 0, frame = 0
+ 279              		@ frame_needed = 0, uses_anonymous_args = 0
+ 280              		@ link register save eliminated.
+ 106:Core/Src/FOC_Driver.c ****     // SVPWM kullanıldığı için DC bus voltajının %57.7'si (1/sqrt(3)) kullanılabilir lineer
+ 107:Core/Src/FOC_Driver.c ****     // Modulation Index'e göre bu değişebilir ama genelde:
+ 108:Core/Src/FOC_Driver.c ****     pHandle->state.d_q_max_voltage = pHandle->input.U_bat * 0.57735f;
+ 281              		.loc 1 108 5 view .LVU109
+ 282              		.loc 1 108 52 is_stmt 0 view .LVU110
+ 283 0000 D0ED147A 		vldr.32	s15, [r0, #80]
+ 284              		.loc 1 108 59 view .LVU111
+ 285 0004 9FED037A 		vldr.32	s14, .L12
+ 286 0008 67EE877A 		vmul.f32	s15, s15, s14
+ 287              		.loc 1 108 36 view .LVU112
+ 288 000c C0ED1D7A 		vstr.32	s15, [r0, #116]
+ 109:Core/Src/FOC_Driver.c **** }
+ 289              		.loc 1 109 1 view .LVU113
+ 290 0010 7047     		bx	lr
+ 291              	.L13:
+ 292 0012 00BF     		.align	2
+ 293              	.L12:
+ 294 0014 36CD133F 		.word	1058262326
+ 295              		.cfi_endproc
+ 296              	.LFE164:
+ 298              		.section	.text.FOC_Direct_Current_Control_d,"ax",%progbits
+ARM GAS  /tmp/cchbRFak.s 			page 8
+
+
+ 299              		.align	1
+ 300              		.global	FOC_Direct_Current_Control_d
+ 301              		.syntax unified
+ 302              		.thumb
+ 303              		.thumb_func
+ 305              	FOC_Direct_Current_Control_d:
+ 306              	.LVL21:
+ 307              	.LFB165:
+ 110:Core/Src/FOC_Driver.c **** 
+ 111:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+ 112:Core/Src/FOC_Driver.c **** 
+ 113:Core/Src/FOC_Driver.c **** void FOC_Direct_Current_Control_d(FOC_Handle_t *pHandle){
+ 308              		.loc 1 113 57 is_stmt 1 view -0
+ 309              		.cfi_startproc
+ 310              		@ args = 0, pretend = 0, frame = 0
+ 311              		@ frame_needed = 0, uses_anonymous_args = 0
+ 312              		@ link register save eliminated.
+ 114:Core/Src/FOC_Driver.c ****     float Kp = pHandle->config.Kp_d;
+ 313              		.loc 1 114 5 view .LVU115
+ 314              		.loc 1 114 11 is_stmt 0 view .LVU116
+ 315 0000 D0ED095A 		vldr.32	s11, [r0, #36]
+ 316              	.LVL22:
+ 115:Core/Src/FOC_Driver.c ****     float Ki = pHandle->config.Ki_d;
+ 317              		.loc 1 115 5 is_stmt 1 view .LVU117
+ 318              		.loc 1 115 11 is_stmt 0 view .LVU118
+ 319 0004 D0ED0A7A 		vldr.32	s15, [r0, #40]
+ 320              	.LVL23:
+ 116:Core/Src/FOC_Driver.c ****     float Ts = pHandle->config.Ts;
+ 321              		.loc 1 116 5 is_stmt 1 view .LVU119
+ 322              		.loc 1 116 11 is_stmt 0 view .LVU120
+ 323 0008 90ED0D5A 		vldr.32	s10, [r0, #52]
+ 324              	.LVL24:
+ 117:Core/Src/FOC_Driver.c ****     float max_volt = pHandle->state.d_q_max_voltage;
+ 325              		.loc 1 117 5 is_stmt 1 view .LVU121
+ 326              		.loc 1 117 11 is_stmt 0 view .LVU122
+ 327 000c 90ED1D7A 		vldr.32	s14, [r0, #116]
+ 328              	.LVL25:
+ 118:Core/Src/FOC_Driver.c ****     
+ 119:Core/Src/FOC_Driver.c ****     float error = pHandle->state.i_d_ref - pHandle->state.i_d;
+ 329              		.loc 1 119 5 is_stmt 1 view .LVU123
+ 330              		.loc 1 119 33 is_stmt 0 view .LVU124
+ 331 0010 90ED166A 		vldr.32	s12, [r0, #88]
+ 332              		.loc 1 119 58 view .LVU125
+ 333 0014 D0ED1A6A 		vldr.32	s13, [r0, #104]
+ 334              		.loc 1 119 11 view .LVU126
+ 335 0018 36EE666A 		vsub.f32	s12, s12, s13
+ 336              	.LVL26:
+ 120:Core/Src/FOC_Driver.c ****     float proportional = Kp * error;
+ 337              		.loc 1 120 5 is_stmt 1 view .LVU127
+ 338              		.loc 1 120 11 is_stmt 0 view .LVU128
+ 339 001c 65EE865A 		vmul.f32	s11, s11, s12
+ 340              	.LVL27:
+ 121:Core/Src/FOC_Driver.c ****     
+ 122:Core/Src/FOC_Driver.c ****     // Integral + Anti-Windup (Clamping)
+ 123:Core/Src/FOC_Driver.c ****     pHandle->state.i_d_memory += Ki * error * Ts;
+ 341              		.loc 1 123 5 is_stmt 1 view .LVU129
+ 342              		.loc 1 123 19 is_stmt 0 view .LVU130
+ARM GAS  /tmp/cchbRFak.s 			page 9
+
+
+ 343 0020 D0ED1E6A 		vldr.32	s13, [r0, #120]
+ 344              		.loc 1 123 37 view .LVU131
+ 345 0024 67EE867A 		vmul.f32	s15, s15, s12
+ 346              	.LVL28:
+ 347              		.loc 1 123 45 view .LVU132
+ 348 0028 67EE857A 		vmul.f32	s15, s15, s10
+ 349              		.loc 1 123 31 view .LVU133
+ 350 002c 76EEA77A 		vadd.f32	s15, s13, s15
+ 351 0030 C0ED1E7A 		vstr.32	s15, [r0, #120]
+ 124:Core/Src/FOC_Driver.c ****     if (pHandle->state.i_d_memory > max_volt) pHandle->state.i_d_memory = max_volt;
+ 352              		.loc 1 124 5 is_stmt 1 view .LVU134
+ 353              		.loc 1 124 8 is_stmt 0 view .LVU135
+ 354 0034 F4EEC77A 		vcmpe.f32	s15, s14
+ 355 0038 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 356 003c 01DD     		ble	.L15
+ 357              		.loc 1 124 47 is_stmt 1 discriminator 1 view .LVU136
+ 358              		.loc 1 124 73 is_stmt 0 discriminator 1 view .LVU137
+ 359 003e 80ED1E7A 		vstr.32	s14, [r0, #120]
+ 360              	.L15:
+ 125:Core/Src/FOC_Driver.c ****     if (pHandle->state.i_d_memory < -max_volt) pHandle->state.i_d_memory = -max_volt;
+ 361              		.loc 1 125 5 is_stmt 1 view .LVU138
+ 362              		.loc 1 125 23 is_stmt 0 view .LVU139
+ 363 0042 D0ED1E7A 		vldr.32	s15, [r0, #120]
+ 364              		.loc 1 125 37 view .LVU140
+ 365 0046 F1EE476A 		vneg.f32	s13, s14
+ 366              		.loc 1 125 8 view .LVU141
+ 367 004a F4EEE67A 		vcmpe.f32	s15, s13
+ 368 004e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 369 0052 01D5     		bpl	.L17
+ 370              		.loc 1 125 48 is_stmt 1 discriminator 1 view .LVU142
+ 371              		.loc 1 125 74 is_stmt 0 discriminator 1 view .LVU143
+ 372 0054 C0ED1E6A 		vstr.32	s13, [r0, #120]
+ 373              	.L17:
+ 126:Core/Src/FOC_Driver.c **** 
+ 127:Core/Src/FOC_Driver.c ****     float u_d_out = proportional + pHandle->state.i_d_memory + pHandle->state.u_d_decoupling;
+ 374              		.loc 1 127 5 is_stmt 1 view .LVU144
+ 375              		.loc 1 127 50 is_stmt 0 view .LVU145
+ 376 0058 D0ED1E7A 		vldr.32	s15, [r0, #120]
+ 377              		.loc 1 127 34 view .LVU146
+ 378 005c 77EEA57A 		vadd.f32	s15, s15, s11
+ 379              		.loc 1 127 78 view .LVU147
+ 380 0060 90ED1B6A 		vldr.32	s12, [r0, #108]
+ 381              	.LVL29:
+ 382              		.loc 1 127 11 view .LVU148
+ 383 0064 77EE867A 		vadd.f32	s15, s15, s12
+ 384              	.LVL30:
+ 128:Core/Src/FOC_Driver.c **** 
+ 129:Core/Src/FOC_Driver.c ****     // Çıkış Limitleme
+ 130:Core/Src/FOC_Driver.c ****     if(u_d_out > max_volt) u_d_out = max_volt;
+ 385              		.loc 1 130 5 is_stmt 1 view .LVU149
+ 386              		.loc 1 130 7 is_stmt 0 view .LVU150
+ 387 0068 B4EEE77A 		vcmpe.f32	s14, s15
+ 388 006c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 389 0070 06D4     		bmi	.L19
+ 131:Core/Src/FOC_Driver.c ****     else if(u_d_out < -max_volt) u_d_out = -max_volt;
+ 390              		.loc 1 131 10 is_stmt 1 view .LVU151
+ 391              		.loc 1 131 12 is_stmt 0 view .LVU152
+ARM GAS  /tmp/cchbRFak.s 			page 10
+
+
+ 392 0072 F4EEE76A 		vcmpe.f32	s13, s15
+ 393 0076 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 394 007a 04DC     		bgt	.L20
+ 127:Core/Src/FOC_Driver.c **** 
+ 395              		.loc 1 127 11 view .LVU153
+ 396 007c B0EE677A 		vmov.f32	s14, s15
+ 397              	.LVL31:
+ 398              	.L19:
+ 132:Core/Src/FOC_Driver.c **** 
+ 133:Core/Src/FOC_Driver.c ****     pHandle->state.u_d = u_d_out;
+ 399              		.loc 1 133 5 is_stmt 1 view .LVU154
+ 400              		.loc 1 133 24 is_stmt 0 view .LVU155
+ 401 0080 80ED207A 		vstr.32	s14, [r0, #128]
+ 134:Core/Src/FOC_Driver.c **** }
+ 402              		.loc 1 134 1 view .LVU156
+ 403 0084 7047     		bx	lr
+ 404              	.LVL32:
+ 405              	.L20:
+ 131:Core/Src/FOC_Driver.c **** 
+ 406              		.loc 1 131 42 discriminator 1 view .LVU157
+ 407 0086 B0EE667A 		vmov.f32	s14, s13
+ 408              	.LVL33:
+ 131:Core/Src/FOC_Driver.c **** 
+ 409              		.loc 1 131 42 discriminator 1 view .LVU158
+ 410 008a F9E7     		b	.L19
+ 411              		.cfi_endproc
+ 412              	.LFE165:
+ 414              		.section	.text.FOC_Direct_Current_Control_q,"ax",%progbits
+ 415              		.align	1
+ 416              		.global	FOC_Direct_Current_Control_q
+ 417              		.syntax unified
+ 418              		.thumb
+ 419              		.thumb_func
+ 421              	FOC_Direct_Current_Control_q:
+ 422              	.LVL34:
+ 423              	.LFB166:
+ 135:Core/Src/FOC_Driver.c **** 
+ 136:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+ 137:Core/Src/FOC_Driver.c **** 
+ 138:Core/Src/FOC_Driver.c **** void FOC_Direct_Current_Control_q(FOC_Handle_t *pHandle){
+ 424              		.loc 1 138 57 is_stmt 1 view -0
+ 425              		.cfi_startproc
+ 426              		@ args = 0, pretend = 0, frame = 0
+ 427              		@ frame_needed = 0, uses_anonymous_args = 0
+ 428              		.loc 1 138 57 is_stmt 0 view .LVU160
+ 429 0000 10B5     		push	{r4, lr}
+ 430              		.cfi_def_cfa_offset 8
+ 431              		.cfi_offset 4, -8
+ 432              		.cfi_offset 14, -4
+ 433 0002 2DED048B 		vpush.64	{d8, d9}
+ 434              		.cfi_def_cfa_offset 24
+ 435              		.cfi_offset 80, -24
+ 436              		.cfi_offset 81, -20
+ 437              		.cfi_offset 82, -16
+ 438              		.cfi_offset 83, -12
+ 439 0006 0446     		mov	r4, r0
+ 139:Core/Src/FOC_Driver.c ****     float Kp = pHandle->config.Kp_q;
+ARM GAS  /tmp/cchbRFak.s 			page 11
+
+
+ 440              		.loc 1 139 5 is_stmt 1 view .LVU161
+ 441              		.loc 1 139 11 is_stmt 0 view .LVU162
+ 442 0008 D0ED0B8A 		vldr.32	s17, [r0, #44]
+ 443              	.LVL35:
+ 140:Core/Src/FOC_Driver.c ****     float Ki = pHandle->config.Ki_q;
+ 444              		.loc 1 140 5 is_stmt 1 view .LVU163
+ 445              		.loc 1 140 11 is_stmt 0 view .LVU164
+ 446 000c 90ED0C8A 		vldr.32	s16, [r0, #48]
+ 447              	.LVL36:
+ 141:Core/Src/FOC_Driver.c ****     float Ts = pHandle->config.Ts;
+ 448              		.loc 1 141 5 is_stmt 1 view .LVU165
+ 449              		.loc 1 141 11 is_stmt 0 view .LVU166
+ 450 0010 90ED0D9A 		vldr.32	s18, [r0, #52]
+ 451              	.LVL37:
+ 142:Core/Src/FOC_Driver.c ****     
+ 143:Core/Src/FOC_Driver.c ****     // Q ekseni için kalan voltaj limitini hesapla
+ 144:Core/Src/FOC_Driver.c ****     float u_d = pHandle->state.u_d;
+ 452              		.loc 1 144 5 is_stmt 1 view .LVU167
+ 453              		.loc 1 144 11 is_stmt 0 view .LVU168
+ 454 0014 D0ED207A 		vldr.32	s15, [r0, #128]
+ 455              	.LVL38:
+ 145:Core/Src/FOC_Driver.c ****     float max_volt_abs = pHandle->state.d_q_max_voltage;
+ 456              		.loc 1 145 5 is_stmt 1 view .LVU169
+ 457              		.loc 1 145 11 is_stmt 0 view .LVU170
+ 458 0018 90ED1D0A 		vldr.32	s0, [r0, #116]
+ 459              	.LVL39:
+ 146:Core/Src/FOC_Driver.c ****     float limit_sq = (max_volt_abs * max_volt_abs) - (u_d * u_d);
+ 460              		.loc 1 146 5 is_stmt 1 view .LVU171
+ 461              		.loc 1 146 36 is_stmt 0 view .LVU172
+ 462 001c 20EE000A 		vmul.f32	s0, s0, s0
+ 463              	.LVL40:
+ 464              		.loc 1 146 59 view .LVU173
+ 465 0020 67EEA77A 		vmul.f32	s15, s15, s15
+ 466              	.LVL41:
+ 467              		.loc 1 146 11 view .LVU174
+ 468 0024 30EE670A 		vsub.f32	s0, s0, s15
+ 469              	.LVL42:
+ 147:Core/Src/FOC_Driver.c ****     float limit_volts = (limit_sq > 0.0f) ? sqrtf(limit_sq) : 0.0f;
+ 470              		.loc 1 147 5 is_stmt 1 view .LVU175
+ 471              		.loc 1 147 61 is_stmt 0 view .LVU176
+ 472 0028 B5EEC00A 		vcmpe.f32	s0, #0
+ 473 002c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 474 0030 3EDC     		bgt	.L38
+ 475              		.loc 1 147 61 discriminator 2 view .LVU177
+ 476 0032 9FED220A 		vldr.32	s0, .L39
+ 477              	.LVL43:
+ 478              	.L24:
+ 148:Core/Src/FOC_Driver.c **** 
+ 149:Core/Src/FOC_Driver.c ****     float error = pHandle->state.i_q_ref - pHandle->state.i_q;
+ 479              		.loc 1 149 5 is_stmt 1 view .LVU178
+ 480              		.loc 1 149 33 is_stmt 0 view .LVU179
+ 481 0036 94ED157A 		vldr.32	s14, [r4, #84]
+ 482              		.loc 1 149 58 view .LVU180
+ 483 003a D4ED197A 		vldr.32	s15, [r4, #100]
+ 484              		.loc 1 149 11 view .LVU181
+ 485 003e 37EE677A 		vsub.f32	s14, s14, s15
+ 486              	.LVL44:
+ARM GAS  /tmp/cchbRFak.s 			page 12
+
+
+ 150:Core/Src/FOC_Driver.c ****     float proportional = Kp * error;
+ 487              		.loc 1 150 5 is_stmt 1 view .LVU182
+ 488              		.loc 1 150 11 is_stmt 0 view .LVU183
+ 489 0042 68EE878A 		vmul.f32	s17, s17, s14
+ 490              	.LVL45:
+ 151:Core/Src/FOC_Driver.c **** 
+ 152:Core/Src/FOC_Driver.c ****     // Integral + Anti-Windup
+ 153:Core/Src/FOC_Driver.c ****     pHandle->state.i_q_memory += Ki * error * Ts;
+ 491              		.loc 1 153 5 is_stmt 1 view .LVU184
+ 492              		.loc 1 153 19 is_stmt 0 view .LVU185
+ 493 0046 D4ED1F7A 		vldr.32	s15, [r4, #124]
+ 494              		.loc 1 153 37 view .LVU186
+ 495 004a 28EE078A 		vmul.f32	s16, s16, s14
+ 496              	.LVL46:
+ 497              		.loc 1 153 45 view .LVU187
+ 498 004e 28EE098A 		vmul.f32	s16, s16, s18
+ 499              		.loc 1 153 31 view .LVU188
+ 500 0052 77EE887A 		vadd.f32	s15, s15, s16
+ 501 0056 C4ED1F7A 		vstr.32	s15, [r4, #124]
+ 154:Core/Src/FOC_Driver.c ****     if (pHandle->state.i_q_memory > limit_volts) pHandle->state.i_q_memory = limit_volts;
+ 502              		.loc 1 154 5 is_stmt 1 view .LVU189
+ 503              		.loc 1 154 8 is_stmt 0 view .LVU190
+ 504 005a F4EEC07A 		vcmpe.f32	s15, s0
+ 505 005e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 506 0062 01DD     		ble	.L26
+ 507              		.loc 1 154 50 is_stmt 1 discriminator 1 view .LVU191
+ 508              		.loc 1 154 76 is_stmt 0 discriminator 1 view .LVU192
+ 509 0064 84ED1F0A 		vstr.32	s0, [r4, #124]
+ 510              	.L26:
+ 155:Core/Src/FOC_Driver.c ****     if (pHandle->state.i_q_memory < -limit_volts) pHandle->state.i_q_memory = -limit_volts;
+ 511              		.loc 1 155 5 is_stmt 1 view .LVU193
+ 512              		.loc 1 155 23 is_stmt 0 view .LVU194
+ 513 0068 D4ED1F7A 		vldr.32	s15, [r4, #124]
+ 514              		.loc 1 155 37 view .LVU195
+ 515 006c B1EE407A 		vneg.f32	s14, s0
+ 516              	.LVL47:
+ 517              		.loc 1 155 8 view .LVU196
+ 518 0070 F4EEC77A 		vcmpe.f32	s15, s14
+ 519 0074 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 520 0078 01D5     		bpl	.L28
+ 521              		.loc 1 155 51 is_stmt 1 discriminator 1 view .LVU197
+ 522              		.loc 1 155 77 is_stmt 0 discriminator 1 view .LVU198
+ 523 007a 84ED1F7A 		vstr.32	s14, [r4, #124]
+ 524              	.L28:
+ 156:Core/Src/FOC_Driver.c **** 
+ 157:Core/Src/FOC_Driver.c ****     float u_q_out = proportional + pHandle->state.i_q_memory + pHandle->state.u_q_decoupling;
+ 525              		.loc 1 157 5 is_stmt 1 view .LVU199
+ 526              		.loc 1 157 50 is_stmt 0 view .LVU200
+ 527 007e D4ED1F7A 		vldr.32	s15, [r4, #124]
+ 528              		.loc 1 157 34 view .LVU201
+ 529 0082 77EEA87A 		vadd.f32	s15, s15, s17
+ 530              		.loc 1 157 78 view .LVU202
+ 531 0086 D4ED1C6A 		vldr.32	s13, [r4, #112]
+ 532              		.loc 1 157 11 view .LVU203
+ 533 008a 77EEA67A 		vadd.f32	s15, s15, s13
+ 534              	.LVL48:
+ 158:Core/Src/FOC_Driver.c **** 
+ARM GAS  /tmp/cchbRFak.s 			page 13
+
+
+ 159:Core/Src/FOC_Driver.c ****     // Çıkış Limitleme
+ 160:Core/Src/FOC_Driver.c ****     if(u_q_out > limit_volts) u_q_out = limit_volts;
+ 535              		.loc 1 160 5 is_stmt 1 view .LVU204
+ 536              		.loc 1 160 7 is_stmt 0 view .LVU205
+ 537 008e B4EEE70A 		vcmpe.f32	s0, s15
+ 538 0092 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 539 0096 06D4     		bmi	.L30
+ 161:Core/Src/FOC_Driver.c ****     else if(u_q_out < -limit_volts) u_q_out = -limit_volts;
+ 540              		.loc 1 161 10 is_stmt 1 view .LVU206
+ 541              		.loc 1 161 12 is_stmt 0 view .LVU207
+ 542 0098 B4EEE77A 		vcmpe.f32	s14, s15
+ 543 009c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 544 00a0 09DC     		bgt	.L32
+ 157:Core/Src/FOC_Driver.c **** 
+ 545              		.loc 1 157 11 view .LVU208
+ 546 00a2 B0EE670A 		vmov.f32	s0, s15
+ 547              	.LVL49:
+ 548              	.L30:
+ 162:Core/Src/FOC_Driver.c **** 
+ 163:Core/Src/FOC_Driver.c ****     pHandle->state.u_q = u_q_out;
+ 549              		.loc 1 163 5 is_stmt 1 view .LVU209
+ 550              		.loc 1 163 24 is_stmt 0 view .LVU210
+ 551 00a6 84ED210A 		vstr.32	s0, [r4, #132]
+ 164:Core/Src/FOC_Driver.c **** }
+ 552              		.loc 1 164 1 view .LVU211
+ 553 00aa BDEC048B 		vldm	sp!, {d8-d9}
+ 554              		.cfi_remember_state
+ 555              		.cfi_restore 82
+ 556              		.cfi_restore 83
+ 557              		.cfi_restore 80
+ 558              		.cfi_restore 81
+ 559              		.cfi_def_cfa_offset 8
+ 560              	.LVL50:
+ 561              		.loc 1 164 1 view .LVU212
+ 562 00ae 10BD     		pop	{r4, pc}
+ 563              	.LVL51:
+ 564              	.L38:
+ 565              		.cfi_restore_state
+ 147:Core/Src/FOC_Driver.c **** 
+ 566              		.loc 1 147 45 discriminator 1 view .LVU213
+ 567 00b0 FFF7FEFF 		bl	sqrtf
+ 568              	.LVL52:
+ 147:Core/Src/FOC_Driver.c **** 
+ 569              		.loc 1 147 45 discriminator 1 view .LVU214
+ 570 00b4 BFE7     		b	.L24
+ 571              	.LVL53:
+ 572              	.L32:
+ 161:Core/Src/FOC_Driver.c **** 
+ 573              		.loc 1 161 45 discriminator 1 view .LVU215
+ 574 00b6 B0EE470A 		vmov.f32	s0, s14
+ 575              	.LVL54:
+ 161:Core/Src/FOC_Driver.c **** 
+ 576              		.loc 1 161 45 discriminator 1 view .LVU216
+ 577 00ba F4E7     		b	.L30
+ 578              	.L40:
+ 579              		.align	2
+ 580              	.L39:
+ARM GAS  /tmp/cchbRFak.s 			page 14
+
+
+ 581 00bc 00000000 		.word	0
+ 582              		.cfi_endproc
+ 583              	.LFE166:
+ 585              		.section	.text.FOC_SVPWM_Calculation,"ax",%progbits
+ 586              		.align	1
+ 587              		.global	FOC_SVPWM_Calculation
+ 588              		.syntax unified
+ 589              		.thumb
+ 590              		.thumb_func
+ 592              	FOC_SVPWM_Calculation:
+ 593              	.LVL55:
+ 594              	.LFB168:
+ 165:Core/Src/FOC_Driver.c **** 
+ 166:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+ 167:Core/Src/FOC_Driver.c **** 
+ 168:Core/Src/FOC_Driver.c **** void FOC_Inverse_Clark_Park_Transform(FOC_Handle_t *pHandle){
+ 169:Core/Src/FOC_Driver.c ****     float u_d = pHandle->state.u_d;
+ 170:Core/Src/FOC_Driver.c ****     float u_q = pHandle->state.u_q;
+ 171:Core/Src/FOC_Driver.c ****     float alpha_rad = pHandle->input.Electrical_Angle_rad;
+ 172:Core/Src/FOC_Driver.c ****     float sin_val, cos_val;
+ 173:Core/Src/FOC_Driver.c **** 
+ 174:Core/Src/FOC_Driver.c ****     FOC_G4_Cos_Sin_Calculate(alpha_rad, &cos_val, &sin_val);
+ 175:Core/Src/FOC_Driver.c **** 
+ 176:Core/Src/FOC_Driver.c ****     // Inverse Park (d,q -> alpha, beta)
+ 177:Core/Src/FOC_Driver.c ****     pHandle->state.u_x = (u_d * cos_val) - (u_q * sin_val); // Alpha
+ 178:Core/Src/FOC_Driver.c ****     pHandle->state.u_y = (u_d * sin_val) + (u_q * cos_val); // Beta
+ 179:Core/Src/FOC_Driver.c **** }
+ 180:Core/Src/FOC_Driver.c **** 
+ 181:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+ 182:Core/Src/FOC_Driver.c **** 
+ 183:Core/Src/FOC_Driver.c **** void FOC_SVPWM_Calculation(FOC_Handle_t *pHandle){
+ 595              		.loc 1 183 50 is_stmt 1 view -0
+ 596              		.cfi_startproc
+ 597              		@ args = 0, pretend = 0, frame = 0
+ 598              		@ frame_needed = 0, uses_anonymous_args = 0
+ 599              		@ link register save eliminated.
+ 184:Core/Src/FOC_Driver.c ****     // Midpoint Clamp Yöntemi (Space Vector Generator)
+ 185:Core/Src/FOC_Driver.c ****     float U_alpha = pHandle->state.u_x;
+ 600              		.loc 1 185 5 view .LVU218
+ 601              		.loc 1 185 11 is_stmt 0 view .LVU219
+ 602 0000 D0ED226A 		vldr.32	s13, [r0, #136]
+ 603              	.LVL56:
+ 186:Core/Src/FOC_Driver.c ****     float U_beta = pHandle->state.u_y;
+ 604              		.loc 1 186 5 is_stmt 1 view .LVU220
+ 605              		.loc 1 186 11 is_stmt 0 view .LVU221
+ 606 0004 90ED237A 		vldr.32	s14, [r0, #140]
+ 607              	.LVL57:
+ 187:Core/Src/FOC_Driver.c ****     float U_DC = pHandle->input.U_bat;
+ 608              		.loc 1 187 5 is_stmt 1 view .LVU222
+ 609              		.loc 1 187 11 is_stmt 0 view .LVU223
+ 610 0008 90ED145A 		vldr.32	s10, [r0, #80]
+ 611              	.LVL58:
+ 188:Core/Src/FOC_Driver.c **** 
+ 189:Core/Src/FOC_Driver.c ****     if(U_DC < 1.0f) U_DC = 12.0f; // Sıfıra bölme koruması
+ 612              		.loc 1 189 5 is_stmt 1 view .LVU224
+ 613              		.loc 1 189 7 is_stmt 0 view .LVU225
+ 614 000c F7EE007A 		vmov.f32	s15, #1.0e+0
+ARM GAS  /tmp/cchbRFak.s 			page 15
+
+
+ 615 0010 B4EEE75A 		vcmpe.f32	s10, s15
+ 616 0014 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 617 0018 63D4     		bmi	.L73
+ 618              	.LVL59:
+ 619              	.L42:
+ 190:Core/Src/FOC_Driver.c **** 
+ 191:Core/Src/FOC_Driver.c ****     // 1. Inverse Clark ile 3 faz potansiyellerini (Va, Vb, Vc) bul
+ 192:Core/Src/FOC_Driver.c ****     float Va = U_alpha;
+ 620              		.loc 1 192 5 is_stmt 1 view .LVU226
+ 193:Core/Src/FOC_Driver.c ****     float Vb = (-0.5f * U_alpha) + (0.8660254f * U_beta);
+ 621              		.loc 1 193 5 view .LVU227
+ 622              		.loc 1 193 23 is_stmt 0 view .LVU228
+ 623 001a FEEE007A 		vmov.f32	s15, #-5.0e-1
+ 624 001e 66EEA77A 		vmul.f32	s15, s13, s15
+ 625              		.loc 1 193 48 view .LVU229
+ 626 0022 9FED426A 		vldr.32	s12, .L75
+ 627 0026 27EE067A 		vmul.f32	s14, s14, s12
+ 628              	.LVL60:
+ 629              		.loc 1 193 11 view .LVU230
+ 630 002a 37EE876A 		vadd.f32	s12, s15, s14
+ 631              	.LVL61:
+ 194:Core/Src/FOC_Driver.c ****     float Vc = (-0.5f * U_alpha) - (0.8660254f * U_beta);
+ 632              		.loc 1 194 5 is_stmt 1 view .LVU231
+ 633              		.loc 1 194 11 is_stmt 0 view .LVU232
+ 634 002e 77EEC77A 		vsub.f32	s15, s15, s14
+ 635              	.LVL62:
+ 195:Core/Src/FOC_Driver.c **** 
+ 196:Core/Src/FOC_Driver.c ****     // 2. Min ve Max faz voltajlarını bul
+ 197:Core/Src/FOC_Driver.c ****     float V_max = Va;
+ 636              		.loc 1 197 5 is_stmt 1 view .LVU233
+ 198:Core/Src/FOC_Driver.c ****     float V_min = Va;
+ 637              		.loc 1 198 5 view .LVU234
+ 199:Core/Src/FOC_Driver.c **** 
+ 200:Core/Src/FOC_Driver.c ****     if (Vb > V_max) V_max = Vb;
+ 638              		.loc 1 200 5 view .LVU235
+ 639              		.loc 1 200 8 is_stmt 0 view .LVU236
+ 640 0032 F4EEC66A 		vcmpe.f32	s13, s12
+ 641 0036 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 642 003a 55D4     		bmi	.L60
+ 197:Core/Src/FOC_Driver.c ****     float V_min = Va;
+ 643              		.loc 1 197 11 view .LVU237
+ 644 003c B0EE667A 		vmov.f32	s14, s13
+ 645              	.L43:
+ 646              	.LVL63:
+ 201:Core/Src/FOC_Driver.c ****     if (Vc > V_max) V_max = Vc;
+ 647              		.loc 1 201 5 is_stmt 1 view .LVU238
+ 648              		.loc 1 201 8 is_stmt 0 view .LVU239
+ 649 0040 B4EEE77A 		vcmpe.f32	s14, s15
+ 650 0044 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 651 0048 01D5     		bpl	.L44
+ 652              		.loc 1 201 27 discriminator 1 view .LVU240
+ 653 004a B0EE677A 		vmov.f32	s14, s15
+ 654              	.LVL64:
+ 655              	.L44:
+ 202:Core/Src/FOC_Driver.c ****     if (Vb < V_min) V_min = Vb;
+ 656              		.loc 1 202 5 is_stmt 1 view .LVU241
+ 657              		.loc 1 202 8 is_stmt 0 view .LVU242
+ARM GAS  /tmp/cchbRFak.s 			page 16
+
+
+ 658 004e F4EEC66A 		vcmpe.f32	s13, s12
+ 659 0052 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 660 0056 4ADC     		bgt	.L62
+ 198:Core/Src/FOC_Driver.c **** 
+ 661              		.loc 1 198 11 view .LVU243
+ 662 0058 F0EE665A 		vmov.f32	s11, s13
+ 663              	.L45:
+ 664              	.LVL65:
+ 203:Core/Src/FOC_Driver.c ****     if (Vc < V_min) V_min = Vc;
+ 665              		.loc 1 203 5 is_stmt 1 view .LVU244
+ 666              		.loc 1 203 8 is_stmt 0 view .LVU245
+ 667 005c F4EEE75A 		vcmpe.f32	s11, s15
+ 668 0060 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 669 0064 01DD     		ble	.L46
+ 670              		.loc 1 203 27 discriminator 1 view .LVU246
+ 671 0066 F0EE675A 		vmov.f32	s11, s15
+ 672              	.LVL66:
+ 673              	.L46:
+ 204:Core/Src/FOC_Driver.c **** 
+ 205:Core/Src/FOC_Driver.c ****     // 3. Zero Sequence Offset (Midpoint) hesapla
+ 206:Core/Src/FOC_Driver.c ****     float V_offset = -0.5f * (V_max + V_min);
+ 674              		.loc 1 206 5 is_stmt 1 view .LVU247
+ 675              		.loc 1 206 37 is_stmt 0 view .LVU248
+ 676 006a 37EE257A 		vadd.f32	s14, s14, s11
+ 677              	.LVL67:
+ 678              		.loc 1 206 11 view .LVU249
+ 679 006e FEEE005A 		vmov.f32	s11, #-5.0e-1
+ 680              	.LVL68:
+ 681              		.loc 1 206 11 view .LVU250
+ 682 0072 27EE257A 		vmul.f32	s14, s14, s11
+ 683              	.LVL69:
+ 207:Core/Src/FOC_Driver.c **** 
+ 208:Core/Src/FOC_Driver.c ****     // 4. Duty Cycle Hesapla (0.0 ile 1.0 arası)
+ 209:Core/Src/FOC_Driver.c ****     pHandle->output.duty_a = ((Va + V_offset) / U_DC) + 0.5f;
+ 684              		.loc 1 209 5 is_stmt 1 view .LVU251
+ 685              		.loc 1 209 35 is_stmt 0 view .LVU252
+ 686 0076 76EE876A 		vadd.f32	s13, s13, s14
+ 687              	.LVL70:
+ 688              		.loc 1 209 47 view .LVU253
+ 689 007a C6EE855A 		vdiv.f32	s11, s13, s10
+ 690              		.loc 1 209 55 view .LVU254
+ 691 007e F6EE004A 		vmov.f32	s9, #5.0e-1
+ 692 0082 75EEA45A 		vadd.f32	s11, s11, s9
+ 693              		.loc 1 209 28 view .LVU255
+ 694 0086 C0ED275A 		vstr.32	s11, [r0, #156]
+ 210:Core/Src/FOC_Driver.c ****     pHandle->output.duty_b = ((Vb + V_offset) / U_DC) + 0.5f;
+ 695              		.loc 1 210 5 is_stmt 1 view .LVU256
+ 696              		.loc 1 210 35 is_stmt 0 view .LVU257
+ 697 008a 36EE076A 		vadd.f32	s12, s12, s14
+ 698              	.LVL71:
+ 699              		.loc 1 210 47 view .LVU258
+ 700 008e C6EE056A 		vdiv.f32	s13, s12, s10
+ 701              		.loc 1 210 55 view .LVU259
+ 702 0092 76EEA46A 		vadd.f32	s13, s13, s9
+ 703              		.loc 1 210 28 view .LVU260
+ 704 0096 C0ED286A 		vstr.32	s13, [r0, #160]
+ 211:Core/Src/FOC_Driver.c ****     pHandle->output.duty_c = ((Vc + V_offset) / U_DC) + 0.5f;
+ARM GAS  /tmp/cchbRFak.s 			page 17
+
+
+ 705              		.loc 1 211 5 is_stmt 1 view .LVU261
+ 706              		.loc 1 211 35 is_stmt 0 view .LVU262
+ 707 009a 77EE877A 		vadd.f32	s15, s15, s14
+ 708              	.LVL72:
+ 709              		.loc 1 211 47 view .LVU263
+ 710 009e 87EE857A 		vdiv.f32	s14, s15, s10
+ 711              	.LVL73:
+ 712              		.loc 1 211 55 view .LVU264
+ 713 00a2 77EE247A 		vadd.f32	s15, s14, s9
+ 714              		.loc 1 211 28 view .LVU265
+ 715 00a6 C0ED297A 		vstr.32	s15, [r0, #164]
+ 212:Core/Src/FOC_Driver.c **** 
+ 213:Core/Src/FOC_Driver.c ****     // Saturation (0-1 arası sınırla)
+ 214:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_a > 1.0f) pHandle->output.duty_a = 1.0f; else if(pHandle->output.duty_a
+ 716              		.loc 1 214 5 is_stmt 1 view .LVU266
+ 717              		.loc 1 214 7 is_stmt 0 view .LVU267
+ 718 00aa B7EE007A 		vmov.f32	s14, #1.0e+0
+ 719 00ae F4EEC75A 		vcmpe.f32	s11, s14
+ 720 00b2 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 721 00b6 1DDD     		ble	.L70
+ 722              		.loc 1 214 39 is_stmt 1 discriminator 1 view .LVU268
+ 723              		.loc 1 214 62 is_stmt 0 discriminator 1 view .LVU269
+ 724 00b8 80ED277A 		vstr.32	s14, [r0, #156]
+ 725              	.L49:
+ 215:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_b > 1.0f) pHandle->output.duty_b = 1.0f; else if(pHandle->output.duty_b
+ 726              		.loc 1 215 5 is_stmt 1 view .LVU270
+ 727              		.loc 1 215 7 is_stmt 0 view .LVU271
+ 728 00bc B7EE007A 		vmov.f32	s14, #1.0e+0
+ 729 00c0 F4EEC76A 		vcmpe.f32	s13, s14
+ 730 00c4 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 731 00c8 1DDD     		ble	.L71
+ 732              		.loc 1 215 39 is_stmt 1 discriminator 1 view .LVU272
+ 733              		.loc 1 215 62 is_stmt 0 discriminator 1 view .LVU273
+ 734 00ca 80ED287A 		vstr.32	s14, [r0, #160]
+ 735              	.L53:
+ 216:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_c > 1.0f) pHandle->output.duty_c = 1.0f; else if(pHandle->output.duty_c
+ 736              		.loc 1 216 5 is_stmt 1 view .LVU274
+ 737              		.loc 1 216 7 is_stmt 0 view .LVU275
+ 738 00ce B7EE007A 		vmov.f32	s14, #1.0e+0
+ 739 00d2 F4EEC77A 		vcmpe.f32	s15, s14
+ 740 00d6 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 741 00da 1DDD     		ble	.L72
+ 742              		.loc 1 216 39 is_stmt 1 discriminator 1 view .LVU276
+ 743              		.loc 1 216 62 is_stmt 0 discriminator 1 view .LVU277
+ 744 00dc 80ED297A 		vstr.32	s14, [r0, #164]
+ 745 00e0 7047     		bx	lr
+ 746              	.LVL74:
+ 747              	.L73:
+ 189:Core/Src/FOC_Driver.c **** 
+ 748              		.loc 1 189 26 discriminator 1 view .LVU278
+ 749 00e2 B2EE085A 		vmov.f32	s10, #1.2e+1
+ 750              	.LVL75:
+ 189:Core/Src/FOC_Driver.c **** 
+ 751              		.loc 1 189 26 discriminator 1 view .LVU279
+ 752 00e6 98E7     		b	.L42
+ 753              	.LVL76:
+ 754              	.L60:
+ARM GAS  /tmp/cchbRFak.s 			page 18
+
+
+ 200:Core/Src/FOC_Driver.c ****     if (Vc > V_max) V_max = Vc;
+ 755              		.loc 1 200 27 discriminator 1 view .LVU280
+ 756 00e8 B0EE467A 		vmov.f32	s14, s12
+ 757 00ec A8E7     		b	.L43
+ 758              	.LVL77:
+ 759              	.L62:
+ 202:Core/Src/FOC_Driver.c ****     if (Vc < V_min) V_min = Vc;
+ 760              		.loc 1 202 27 discriminator 1 view .LVU281
+ 761 00ee F0EE465A 		vmov.f32	s11, s12
+ 762 00f2 B3E7     		b	.L45
+ 763              	.LVL78:
+ 764              	.L70:
+ 214:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_b > 1.0f) pHandle->output.duty_b = 1.0f; else if(pHandle->output.duty_b
+ 765              		.loc 1 214 75 is_stmt 1 discriminator 2 view .LVU282
+ 214:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_b > 1.0f) pHandle->output.duty_b = 1.0f; else if(pHandle->output.duty_b
+ 766              		.loc 1 214 77 is_stmt 0 discriminator 2 view .LVU283
+ 767 00f4 F5EEC05A 		vcmpe.f32	s11, #0
+ 768 00f8 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 769 00fc DED5     		bpl	.L49
+ 214:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_b > 1.0f) pHandle->output.duty_b = 1.0f; else if(pHandle->output.duty_b
+ 770              		.loc 1 214 109 is_stmt 1 discriminator 3 view .LVU284
+ 214:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_b > 1.0f) pHandle->output.duty_b = 1.0f; else if(pHandle->output.duty_b
+ 771              		.loc 1 214 132 is_stmt 0 discriminator 3 view .LVU285
+ 772 00fe 0023     		movs	r3, #0
+ 773 0100 C0F89C30 		str	r3, [r0, #156]	@ float
+ 774 0104 DAE7     		b	.L49
+ 775              	.L71:
+ 215:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_c > 1.0f) pHandle->output.duty_c = 1.0f; else if(pHandle->output.duty_c
+ 776              		.loc 1 215 75 is_stmt 1 discriminator 2 view .LVU286
+ 215:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_c > 1.0f) pHandle->output.duty_c = 1.0f; else if(pHandle->output.duty_c
+ 777              		.loc 1 215 77 is_stmt 0 discriminator 2 view .LVU287
+ 778 0106 F5EEC06A 		vcmpe.f32	s13, #0
+ 779 010a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 780 010e DED5     		bpl	.L53
+ 215:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_c > 1.0f) pHandle->output.duty_c = 1.0f; else if(pHandle->output.duty_c
+ 781              		.loc 1 215 109 is_stmt 1 discriminator 3 view .LVU288
+ 215:Core/Src/FOC_Driver.c ****     if(pHandle->output.duty_c > 1.0f) pHandle->output.duty_c = 1.0f; else if(pHandle->output.duty_c
+ 782              		.loc 1 215 132 is_stmt 0 discriminator 3 view .LVU289
+ 783 0110 0023     		movs	r3, #0
+ 784 0112 C0F8A030 		str	r3, [r0, #160]	@ float
+ 785 0116 DAE7     		b	.L53
+ 786              	.L72:
+ 787              		.loc 1 216 75 is_stmt 1 discriminator 2 view .LVU290
+ 788              		.loc 1 216 77 is_stmt 0 discriminator 2 view .LVU291
+ 789 0118 F5EEC07A 		vcmpe.f32	s15, #0
+ 790 011c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 791 0120 00D4     		bmi	.L74
+ 792              	.L41:
+ 217:Core/Src/FOC_Driver.c **** }
+ 793              		.loc 1 217 1 view .LVU292
+ 794 0122 7047     		bx	lr
+ 795              	.L74:
+ 216:Core/Src/FOC_Driver.c **** }
+ 796              		.loc 1 216 109 is_stmt 1 discriminator 3 view .LVU293
+ 216:Core/Src/FOC_Driver.c **** }
+ 797              		.loc 1 216 132 is_stmt 0 discriminator 3 view .LVU294
+ 798 0124 0023     		movs	r3, #0
+ARM GAS  /tmp/cchbRFak.s 			page 19
+
+
+ 799 0126 C0F8A430 		str	r3, [r0, #164]	@ float
+ 800              		.loc 1 217 1 view .LVU295
+ 801 012a FAE7     		b	.L41
+ 802              	.L76:
+ 803              		.align	2
+ 804              	.L75:
+ 805 012c D7B35D3F 		.word	1063105495
+ 806              		.cfi_endproc
+ 807              	.LFE168:
+ 809              		.section	.text.FOC_G4_Cos_Sin_Calculate,"ax",%progbits
+ 810              		.align	1
+ 811              		.global	FOC_G4_Cos_Sin_Calculate
+ 812              		.syntax unified
+ 813              		.thumb
+ 814              		.thumb_func
+ 816              	FOC_G4_Cos_Sin_Calculate:
+ 817              	.LVL79:
+ 818              	.LFB169:
+ 218:Core/Src/FOC_Driver.c **** 
+ 219:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+ 220:Core/Src/FOC_Driver.c **** 
+ 221:Core/Src/FOC_Driver.c **** void FOC_G4_Cos_Sin_Calculate(float angle_rad, float *cos_value, float *sin_value){
+ 819              		.loc 1 221 83 is_stmt 1 view -0
+ 820              		.cfi_startproc
+ 821              		@ args = 0, pretend = 0, frame = 0
+ 822              		@ frame_needed = 0, uses_anonymous_args = 0
+ 823              		@ link register save eliminated.
+ 222:Core/Src/FOC_Driver.c ****     int32_t input_q31;
+ 824              		.loc 1 222 5 view .LVU297
+ 223:Core/Src/FOC_Driver.c ****     int32_t cos_q31, sin_q31;
+ 825              		.loc 1 223 5 view .LVU298
+ 224:Core/Src/FOC_Driver.c **** 
+ 225:Core/Src/FOC_Driver.c ****     // Açıyı -PI ile +PI arasına sarmala
+ 226:Core/Src/FOC_Driver.c ****     while (angle_rad > 3.141592741f) angle_rad -= 6.283185482f;
+ 826              		.loc 1 226 5 view .LVU299
+ 827              		.loc 1 226 11 is_stmt 0 view .LVU300
+ 828 0000 03E0     		b	.L78
+ 829              	.L79:
+ 830              		.loc 1 226 38 is_stmt 1 discriminator 2 view .LVU301
+ 831              		.loc 1 226 48 is_stmt 0 discriminator 2 view .LVU302
+ 832 0002 DFED197A 		vldr.32	s15, .L82
+ 833 0006 30EE670A 		vsub.f32	s0, s0, s15
+ 834              	.LVL80:
+ 835              	.L78:
+ 836              		.loc 1 226 22 is_stmt 1 discriminator 1 view .LVU303
+ 837 000a DFED187A 		vldr.32	s15, .L82+4
+ 838 000e B4EEE70A 		vcmpe.f32	s0, s15
+ 839 0012 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 840 0016 F4DC     		bgt	.L79
+ 841              		.loc 1 226 22 is_stmt 0 discriminator 1 view .LVU304
+ 842 0018 03E0     		b	.L80
+ 843              	.L81:
+ 227:Core/Src/FOC_Driver.c ****     while (angle_rad < -3.141592741f) angle_rad += 6.283185482f;
+ 844              		.loc 1 227 39 is_stmt 1 discriminator 2 view .LVU305
+ 845              		.loc 1 227 49 is_stmt 0 discriminator 2 view .LVU306
+ 846 001a DFED137A 		vldr.32	s15, .L82
+ 847 001e 30EE270A 		vadd.f32	s0, s0, s15
+ARM GAS  /tmp/cchbRFak.s 			page 20
+
+
+ 848              	.LVL81:
+ 849              	.L80:
+ 850              		.loc 1 227 22 is_stmt 1 discriminator 1 view .LVU307
+ 851 0022 DFED137A 		vldr.32	s15, .L82+8
+ 852 0026 B4EEE70A 		vcmpe.f32	s0, s15
+ 853 002a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 854 002e F4D4     		bmi	.L81
+ 228:Core/Src/FOC_Driver.c **** 
+ 229:Core/Src/FOC_Driver.c ****     // Q31 formatına dönüştür
+ 230:Core/Src/FOC_Driver.c ****     input_q31 = (int32_t)(angle_rad * CONST_SCALE);
+ 855              		.loc 1 230 5 view .LVU308
+ 856              		.loc 1 230 37 is_stmt 0 view .LVU309
+ 857 0030 DFED107A 		vldr.32	s15, .L82+12
+ 858 0034 20EE270A 		vmul.f32	s0, s0, s15
+ 859              	.LVL82:
+ 860              		.loc 1 230 15 view .LVU310
+ 861 0038 BDEEC00A 		vcvt.s32.f32	s0, s0
+ 862              	.LVL83:
+ 231:Core/Src/FOC_Driver.c **** 
+ 232:Core/Src/FOC_Driver.c ****     // CORDIC Donanımına Yaz
+ 233:Core/Src/FOC_Driver.c ****     CORDIC->WDATA = input_q31;
+ 863              		.loc 1 233 5 is_stmt 1 view .LVU311
+ 864              		.loc 1 233 19 is_stmt 0 view .LVU312
+ 865 003c 0E4B     		ldr	r3, .L82+16
+ 866 003e 83ED010A 		vstr.32	s0, [r3, #4]	@ int
+ 234:Core/Src/FOC_Driver.c **** 
+ 235:Core/Src/FOC_Driver.c ****     // CORDIC Donanımından Oku (Cos ve Sin sırası config'e göre değişebilir, genelde böyled
+ 236:Core/Src/FOC_Driver.c ****     cos_q31 = (int32_t)(CORDIC->RDATA); 
+ 867              		.loc 1 236 5 is_stmt 1 view .LVU313
+ 868              		.loc 1 236 31 is_stmt 0 view .LVU314
+ 869 0042 93ED027A 		vldr.32	s14, [r3, #8]	@ int
+ 870              	.LVL84:
+ 237:Core/Src/FOC_Driver.c ****     sin_q31 = (int32_t)(CORDIC->RDATA);
+ 871              		.loc 1 237 5 is_stmt 1 view .LVU315
+ 872              		.loc 1 237 31 is_stmt 0 view .LVU316
+ 873 0046 D3ED027A 		vldr.32	s15, [r3, #8]	@ int
+ 874              	.LVL85:
+ 238:Core/Src/FOC_Driver.c ****     
+ 239:Core/Src/FOC_Driver.c ****     // Float'a geri çevir
+ 240:Core/Src/FOC_Driver.c ****     *cos_value = (float)cos_q31 * CONST_UNSCALE;
+ 875              		.loc 1 240 5 is_stmt 1 view .LVU317
+ 876              		.loc 1 240 18 is_stmt 0 view .LVU318
+ 877 004a B8EEC77A 		vcvt.f32.s32	s14, s14
+ 878              	.LVL86:
+ 879              		.loc 1 240 33 view .LVU319
+ 880 004e DFED0B6A 		vldr.32	s13, .L82+20
+ 881 0052 27EE267A 		vmul.f32	s14, s14, s13
+ 882              		.loc 1 240 16 view .LVU320
+ 883 0056 80ED007A 		vstr.32	s14, [r0]
+ 241:Core/Src/FOC_Driver.c ****     *sin_value = (float)sin_q31 * CONST_UNSCALE;
+ 884              		.loc 1 241 5 is_stmt 1 view .LVU321
+ 885              		.loc 1 241 18 is_stmt 0 view .LVU322
+ 886 005a F8EEE77A 		vcvt.f32.s32	s15, s15
+ 887              	.LVL87:
+ 888              		.loc 1 241 33 view .LVU323
+ 889 005e 67EEA67A 		vmul.f32	s15, s15, s13
+ 890              		.loc 1 241 16 view .LVU324
+ARM GAS  /tmp/cchbRFak.s 			page 21
+
+
+ 891 0062 C1ED007A 		vstr.32	s15, [r1]
+ 242:Core/Src/FOC_Driver.c **** }
+ 892              		.loc 1 242 1 view .LVU325
+ 893 0066 7047     		bx	lr
+ 894              	.L83:
+ 895              		.align	2
+ 896              	.L82:
+ 897 0068 DB0FC940 		.word	1086918619
+ 898 006c DB0F4940 		.word	1078530011
+ 899 0070 DB0F49C0 		.word	-1068953637
+ 900 0074 83F9224E 		.word	1310914947
+ 901 0078 000C0240 		.word	1073875968
+ 902 007c BD12C930 		.word	818483901
+ 903              		.cfi_endproc
+ 904              	.LFE169:
+ 906              		.section	.text.FOC_Clark_Park_Transform,"ax",%progbits
+ 907              		.align	1
+ 908              		.global	FOC_Clark_Park_Transform
+ 909              		.syntax unified
+ 910              		.thumb
+ 911              		.thumb_func
+ 913              	FOC_Clark_Park_Transform:
+ 914              	.LVL88:
+ 915              	.LFB161:
+  50:Core/Src/FOC_Driver.c ****     float i_a = pHandle->input.i_a_meas;
+ 916              		.loc 1 50 53 is_stmt 1 view -0
+ 917              		.cfi_startproc
+ 918              		@ args = 0, pretend = 0, frame = 8
+ 919              		@ frame_needed = 0, uses_anonymous_args = 0
+  50:Core/Src/FOC_Driver.c ****     float i_a = pHandle->input.i_a_meas;
+ 920              		.loc 1 50 53 is_stmt 0 view .LVU327
+ 921 0000 10B5     		push	{r4, lr}
+ 922              		.cfi_def_cfa_offset 8
+ 923              		.cfi_offset 4, -8
+ 924              		.cfi_offset 14, -4
+ 925 0002 82B0     		sub	sp, sp, #8
+ 926              		.cfi_def_cfa_offset 16
+ 927 0004 0446     		mov	r4, r0
+  51:Core/Src/FOC_Driver.c ****     float i_b = pHandle->input.i_b_meas;
+ 928              		.loc 1 51 5 is_stmt 1 view .LVU328
+  51:Core/Src/FOC_Driver.c ****     float i_b = pHandle->input.i_b_meas;
+ 929              		.loc 1 51 11 is_stmt 0 view .LVU329
+ 930 0006 90ED0F7A 		vldr.32	s14, [r0, #60]
+ 931              	.LVL89:
+  52:Core/Src/FOC_Driver.c ****     float alpha_rad = pHandle->input.Electrical_Angle_rad;
+ 932              		.loc 1 52 5 is_stmt 1 view .LVU330
+  52:Core/Src/FOC_Driver.c ****     float alpha_rad = pHandle->input.Electrical_Angle_rad;
+ 933              		.loc 1 52 11 is_stmt 0 view .LVU331
+ 934 000a D0ED107A 		vldr.32	s15, [r0, #64]
+ 935              	.LVL90:
+  53:Core/Src/FOC_Driver.c ****     float sin_val, cos_val;
+ 936              		.loc 1 53 5 is_stmt 1 view .LVU332
+  54:Core/Src/FOC_Driver.c **** 
+ 937              		.loc 1 54 5 view .LVU333
+  57:Core/Src/FOC_Driver.c ****     pHandle->state.i_beta = (0.5773502f) * (i_a + 2.0f * i_b); 
+ 938              		.loc 1 57 5 view .LVU334
+  57:Core/Src/FOC_Driver.c ****     pHandle->state.i_beta = (0.5773502f) * (i_a + 2.0f * i_b); 
+ARM GAS  /tmp/cchbRFak.s 			page 22
+
+
+ 939              		.loc 1 57 28 is_stmt 0 view .LVU335
+ 940 000e 80ED177A 		vstr.32	s14, [r0, #92]
+  58:Core/Src/FOC_Driver.c **** 
+ 941              		.loc 1 58 5 is_stmt 1 view .LVU336
+  58:Core/Src/FOC_Driver.c **** 
+ 942              		.loc 1 58 56 is_stmt 0 view .LVU337
+ 943 0012 77EEA77A 		vadd.f32	s15, s15, s15
+ 944              	.LVL91:
+  58:Core/Src/FOC_Driver.c **** 
+ 945              		.loc 1 58 49 view .LVU338
+ 946 0016 77EE877A 		vadd.f32	s15, s15, s14
+  58:Core/Src/FOC_Driver.c **** 
+ 947              		.loc 1 58 42 view .LVU339
+ 948 001a 9FED137A 		vldr.32	s14, .L86
+ 949              	.LVL92:
+  58:Core/Src/FOC_Driver.c **** 
+ 950              		.loc 1 58 42 view .LVU340
+ 951 001e 67EE877A 		vmul.f32	s15, s15, s14
+  58:Core/Src/FOC_Driver.c **** 
+ 952              		.loc 1 58 27 view .LVU341
+ 953 0022 C0ED187A 		vstr.32	s15, [r0, #96]
+  61:Core/Src/FOC_Driver.c **** 
+ 954              		.loc 1 61 5 is_stmt 1 view .LVU342
+ 955 0026 01A9     		add	r1, sp, #4
+ 956 0028 6846     		mov	r0, sp
+ 957              	.LVL93:
+  61:Core/Src/FOC_Driver.c **** 
+ 958              		.loc 1 61 5 is_stmt 0 view .LVU343
+ 959 002a 94ED120A 		vldr.32	s0, [r4, #72]
+ 960 002e FFF7FEFF 		bl	FOC_G4_Cos_Sin_Calculate
+ 961              	.LVL94:
+  63:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = -(pHandle->state.i_alpha * sin_val) + (pHandle->state.i_beta * cos_val);
+ 962              		.loc 1 63 5 is_stmt 1 view .LVU344
+  63:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = -(pHandle->state.i_alpha * sin_val) + (pHandle->state.i_beta * cos_val);
+ 963              		.loc 1 63 42 is_stmt 0 view .LVU345
+ 964 0032 94ED177A 		vldr.32	s14, [r4, #92]
+  63:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = -(pHandle->state.i_alpha * sin_val) + (pHandle->state.i_beta * cos_val);
+ 965              		.loc 1 63 51 view .LVU346
+ 966 0036 DDED007A 		vldr.32	s15, [sp]
+ 967 003a 67EE276A 		vmul.f32	s13, s14, s15
+  63:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = -(pHandle->state.i_alpha * sin_val) + (pHandle->state.i_beta * cos_val);
+ 968              		.loc 1 63 79 view .LVU347
+ 969 003e D4ED185A 		vldr.32	s11, [r4, #96]
+  63:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = -(pHandle->state.i_alpha * sin_val) + (pHandle->state.i_beta * cos_val);
+ 970              		.loc 1 63 87 view .LVU348
+ 971 0042 9DED016A 		vldr.32	s12, [sp, #4]
+ 972 0046 25EE865A 		vmul.f32	s10, s11, s12
+  63:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = -(pHandle->state.i_alpha * sin_val) + (pHandle->state.i_beta * cos_val);
+ 973              		.loc 1 63 62 view .LVU349
+ 974 004a 76EE856A 		vadd.f32	s13, s13, s10
+  63:Core/Src/FOC_Driver.c ****     pHandle->state.i_q = -(pHandle->state.i_alpha * sin_val) + (pHandle->state.i_beta * cos_val);
+ 975              		.loc 1 63 24 view .LVU350
+ 976 004e C4ED1A6A 		vstr.32	s13, [r4, #104]
+  64:Core/Src/FOC_Driver.c **** }   
+ 977              		.loc 1 64 5 is_stmt 1 view .LVU351
+  64:Core/Src/FOC_Driver.c **** }   
+ 978              		.loc 1 64 87 is_stmt 0 view .LVU352
+ARM GAS  /tmp/cchbRFak.s 			page 23
+
+
+ 979 0052 67EEA57A 		vmul.f32	s15, s15, s11
+  64:Core/Src/FOC_Driver.c **** }   
+ 980              		.loc 1 64 51 view .LVU353
+ 981 0056 27EE067A 		vmul.f32	s14, s14, s12
+  64:Core/Src/FOC_Driver.c **** }   
+ 982              		.loc 1 64 62 view .LVU354
+ 983 005a 77EEC77A 		vsub.f32	s15, s15, s14
+  64:Core/Src/FOC_Driver.c **** }   
+ 984              		.loc 1 64 24 view .LVU355
+ 985 005e C4ED197A 		vstr.32	s15, [r4, #100]
+  65:Core/Src/FOC_Driver.c **** 
+ 986              		.loc 1 65 1 view .LVU356
+ 987 0062 02B0     		add	sp, sp, #8
+ 988              		.cfi_def_cfa_offset 8
+ 989              		@ sp needed
+ 990 0064 10BD     		pop	{r4, pc}
+ 991              	.LVL95:
+ 992              	.L87:
+  65:Core/Src/FOC_Driver.c **** 
+ 993              		.loc 1 65 1 view .LVU357
+ 994 0066 00BF     		.align	2
+ 995              	.L86:
+ 996 0068 39CD133F 		.word	1058262329
+ 997              		.cfi_endproc
+ 998              	.LFE161:
+ 1000              		.section	.text.FOC_Inverse_Clark_Park_Transform,"ax",%progbits
+ 1001              		.align	1
+ 1002              		.global	FOC_Inverse_Clark_Park_Transform
+ 1003              		.syntax unified
+ 1004              		.thumb
+ 1005              		.thumb_func
+ 1007              	FOC_Inverse_Clark_Park_Transform:
+ 1008              	.LVL96:
+ 1009              	.LFB167:
+ 168:Core/Src/FOC_Driver.c ****     float u_d = pHandle->state.u_d;
+ 1010              		.loc 1 168 61 is_stmt 1 view -0
+ 1011              		.cfi_startproc
+ 1012              		@ args = 0, pretend = 0, frame = 8
+ 1013              		@ frame_needed = 0, uses_anonymous_args = 0
+ 168:Core/Src/FOC_Driver.c ****     float u_d = pHandle->state.u_d;
+ 1014              		.loc 1 168 61 is_stmt 0 view .LVU359
+ 1015 0000 10B5     		push	{r4, lr}
+ 1016              		.cfi_def_cfa_offset 8
+ 1017              		.cfi_offset 4, -8
+ 1018              		.cfi_offset 14, -4
+ 1019 0002 2DED028B 		vpush.64	{d8}
+ 1020              		.cfi_def_cfa_offset 16
+ 1021              		.cfi_offset 80, -16
+ 1022              		.cfi_offset 81, -12
+ 1023 0006 82B0     		sub	sp, sp, #8
+ 1024              		.cfi_def_cfa_offset 24
+ 1025 0008 0446     		mov	r4, r0
+ 169:Core/Src/FOC_Driver.c ****     float u_q = pHandle->state.u_q;
+ 1026              		.loc 1 169 5 is_stmt 1 view .LVU360
+ 169:Core/Src/FOC_Driver.c ****     float u_q = pHandle->state.u_q;
+ 1027              		.loc 1 169 11 is_stmt 0 view .LVU361
+ 1028 000a D0ED208A 		vldr.32	s17, [r0, #128]
+ARM GAS  /tmp/cchbRFak.s 			page 24
+
+
+ 1029              	.LVL97:
+ 170:Core/Src/FOC_Driver.c ****     float alpha_rad = pHandle->input.Electrical_Angle_rad;
+ 1030              		.loc 1 170 5 is_stmt 1 view .LVU362
+ 170:Core/Src/FOC_Driver.c ****     float alpha_rad = pHandle->input.Electrical_Angle_rad;
+ 1031              		.loc 1 170 11 is_stmt 0 view .LVU363
+ 1032 000e 90ED218A 		vldr.32	s16, [r0, #132]
+ 1033              	.LVL98:
+ 171:Core/Src/FOC_Driver.c ****     float sin_val, cos_val;
+ 1034              		.loc 1 171 5 is_stmt 1 view .LVU364
+ 172:Core/Src/FOC_Driver.c **** 
+ 1035              		.loc 1 172 5 view .LVU365
+ 174:Core/Src/FOC_Driver.c **** 
+ 1036              		.loc 1 174 5 view .LVU366
+ 1037 0012 01A9     		add	r1, sp, #4
+ 1038 0014 6846     		mov	r0, sp
+ 1039              	.LVL99:
+ 174:Core/Src/FOC_Driver.c **** 
+ 1040              		.loc 1 174 5 is_stmt 0 view .LVU367
+ 1041 0016 94ED120A 		vldr.32	s0, [r4, #72]
+ 1042 001a FFF7FEFF 		bl	FOC_G4_Cos_Sin_Calculate
+ 1043              	.LVL100:
+ 177:Core/Src/FOC_Driver.c ****     pHandle->state.u_y = (u_d * sin_val) + (u_q * cos_val); // Beta
+ 1044              		.loc 1 177 5 is_stmt 1 view .LVU368
+ 177:Core/Src/FOC_Driver.c ****     pHandle->state.u_y = (u_d * sin_val) + (u_q * cos_val); // Beta
+ 1045              		.loc 1 177 31 is_stmt 0 view .LVU369
+ 1046 001e 9DED007A 		vldr.32	s14, [sp]
+ 1047 0022 67EE286A 		vmul.f32	s13, s14, s17
+ 177:Core/Src/FOC_Driver.c ****     pHandle->state.u_y = (u_d * sin_val) + (u_q * cos_val); // Beta
+ 1048              		.loc 1 177 49 view .LVU370
+ 1049 0026 DDED017A 		vldr.32	s15, [sp, #4]
+ 1050 002a 27EE886A 		vmul.f32	s12, s15, s16
+ 177:Core/Src/FOC_Driver.c ****     pHandle->state.u_y = (u_d * sin_val) + (u_q * cos_val); // Beta
+ 1051              		.loc 1 177 42 view .LVU371
+ 1052 002e 76EEC66A 		vsub.f32	s13, s13, s12
+ 177:Core/Src/FOC_Driver.c ****     pHandle->state.u_y = (u_d * sin_val) + (u_q * cos_val); // Beta
+ 1053              		.loc 1 177 24 view .LVU372
+ 1054 0032 C4ED226A 		vstr.32	s13, [r4, #136]
+ 178:Core/Src/FOC_Driver.c **** }
+ 1055              		.loc 1 178 5 is_stmt 1 view .LVU373
+ 178:Core/Src/FOC_Driver.c **** }
+ 1056              		.loc 1 178 31 is_stmt 0 view .LVU374
+ 1057 0036 67EEA87A 		vmul.f32	s15, s15, s17
+ 178:Core/Src/FOC_Driver.c **** }
+ 1058              		.loc 1 178 49 view .LVU375
+ 1059 003a 27EE087A 		vmul.f32	s14, s14, s16
+ 178:Core/Src/FOC_Driver.c **** }
+ 1060              		.loc 1 178 42 view .LVU376
+ 1061 003e 77EE877A 		vadd.f32	s15, s15, s14
+ 178:Core/Src/FOC_Driver.c **** }
+ 1062              		.loc 1 178 24 view .LVU377
+ 1063 0042 C4ED237A 		vstr.32	s15, [r4, #140]
+ 179:Core/Src/FOC_Driver.c **** 
+ 1064              		.loc 1 179 1 view .LVU378
+ 1065 0046 02B0     		add	sp, sp, #8
+ 1066              		.cfi_def_cfa_offset 16
+ 1067              		@ sp needed
+ 1068 0048 BDEC028B 		vldm	sp!, {d8}
+ARM GAS  /tmp/cchbRFak.s 			page 25
+
+
+ 1069              		.cfi_restore 80
+ 1070              		.cfi_restore 81
+ 1071              		.cfi_def_cfa_offset 8
+ 1072              	.LVL101:
+ 179:Core/Src/FOC_Driver.c **** 
+ 1073              		.loc 1 179 1 view .LVU379
+ 1074 004c 10BD     		pop	{r4, pc}
+ 179:Core/Src/FOC_Driver.c **** 
+ 1075              		.loc 1 179 1 view .LVU380
+ 1076              		.cfi_endproc
+ 1077              	.LFE167:
+ 1079              		.section	.text.FOC_Current_Controller,"ax",%progbits
+ 1080              		.align	1
+ 1081              		.global	FOC_Current_Controller
+ 1082              		.syntax unified
+ 1083              		.thumb
+ 1084              		.thumb_func
+ 1086              	FOC_Current_Controller:
+ 1087              	.LVL102:
+ 1088              	.LFB170:
+ 243:Core/Src/FOC_Driver.c **** 
+ 244:Core/Src/FOC_Driver.c **** // ------------------------------------------------------------------------------
+ 245:Core/Src/FOC_Driver.c **** 
+ 246:Core/Src/FOC_Driver.c **** // ANA DÖNGÜ FONKSİYONU
+ 247:Core/Src/FOC_Driver.c **** // Bu fonksiyon timer interrupt içinde çağrılmalıdır.
+ 248:Core/Src/FOC_Driver.c **** void FOC_Current_Controller(FOC_Handle_t *pHandle){
+ 1089              		.loc 1 248 51 is_stmt 1 view -0
+ 1090              		.cfi_startproc
+ 1091              		@ args = 0, pretend = 0, frame = 0
+ 1092              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1093              		.loc 1 248 51 is_stmt 0 view .LVU382
+ 1094 0000 10B5     		push	{r4, lr}
+ 1095              		.cfi_def_cfa_offset 8
+ 1096              		.cfi_offset 4, -8
+ 1097              		.cfi_offset 14, -4
+ 1098 0002 0446     		mov	r4, r0
+ 249:Core/Src/FOC_Driver.c **** 
+ 250:Core/Src/FOC_Driver.c ****     if(pHandle->config.current_ctrl_mode == false){
+ 1099              		.loc 1 250 5 is_stmt 1 view .LVU383
+ 1100              		.loc 1 250 23 is_stmt 0 view .LVU384
+ 1101 0004 90F83830 		ldrb	r3, [r0, #56]	@ zero_extendqisi2
+ 1102              		.loc 1 250 7 view .LVU385
+ 1103 0008 4BB9     		cbnz	r3, .L91
+ 251:Core/Src/FOC_Driver.c ****         // FOC Kapalıysa çıkışları sıfırla
+ 252:Core/Src/FOC_Driver.c ****         pHandle->output.duty_a = 0.0f;
+ 1104              		.loc 1 252 9 is_stmt 1 view .LVU386
+ 1105              		.loc 1 252 32 is_stmt 0 view .LVU387
+ 1106 000a 0023     		movs	r3, #0
+ 1107 000c C0F89C30 		str	r3, [r0, #156]	@ float
+ 253:Core/Src/FOC_Driver.c ****         pHandle->output.duty_b = 0.0f;
+ 1108              		.loc 1 253 9 is_stmt 1 view .LVU388
+ 1109              		.loc 1 253 32 is_stmt 0 view .LVU389
+ 1110 0010 C0F8A030 		str	r3, [r0, #160]	@ float
+ 254:Core/Src/FOC_Driver.c ****         pHandle->output.duty_c = 0.0f;
+ 1111              		.loc 1 254 9 is_stmt 1 view .LVU390
+ 1112              		.loc 1 254 32 is_stmt 0 view .LVU391
+ 1113 0014 C0F8A430 		str	r3, [r0, #164]	@ float
+ARM GAS  /tmp/cchbRFak.s 			page 26
+
+
+ 255:Core/Src/FOC_Driver.c ****         
+ 256:Core/Src/FOC_Driver.c ****         // Integralleri resetle ki açılınca zıplamasın
+ 257:Core/Src/FOC_Driver.c ****         pHandle->state.i_d_memory = 0.0f;
+ 1114              		.loc 1 257 9 is_stmt 1 view .LVU392
+ 1115              		.loc 1 257 35 is_stmt 0 view .LVU393
+ 1116 0018 8367     		str	r3, [r0, #120]	@ float
+ 258:Core/Src/FOC_Driver.c ****         pHandle->state.i_q_memory = 0.0f;
+ 1117              		.loc 1 258 9 is_stmt 1 view .LVU394
+ 1118              		.loc 1 258 35 is_stmt 0 view .LVU395
+ 1119 001a C367     		str	r3, [r0, #124]	@ float
+ 259:Core/Src/FOC_Driver.c ****         return;
+ 1120              		.loc 1 259 9 is_stmt 1 view .LVU396
+ 1121              	.LVL103:
+ 1122              	.L90:
+ 260:Core/Src/FOC_Driver.c ****     }
+ 261:Core/Src/FOC_Driver.c **** 
+ 262:Core/Src/FOC_Driver.c ****     // 1. Ölçümleri al ve Dönüştür (Clarke & Park)
+ 263:Core/Src/FOC_Driver.c ****     FOC_Clark_Park_Transform(pHandle);
+ 264:Core/Src/FOC_Driver.c **** 
+ 265:Core/Src/FOC_Driver.c ****     // 2. İstenen torku akıma çevir
+ 266:Core/Src/FOC_Driver.c ****     FOC_Torq_Reference_Transform(pHandle);
+ 267:Core/Src/FOC_Driver.c **** 
+ 268:Core/Src/FOC_Driver.c ****     // 3. Voltaj Limitlerini ve Decoupling hesapla
+ 269:Core/Src/FOC_Driver.c ****     FOC_Max_Voltage(pHandle);
+ 270:Core/Src/FOC_Driver.c ****     FOC_Voltage_Decoupling(pHandle);
+ 271:Core/Src/FOC_Driver.c **** 
+ 272:Core/Src/FOC_Driver.c ****     // 4. PI Kontrolcüleri Çalıştır
+ 273:Core/Src/FOC_Driver.c ****     FOC_Direct_Current_Control_d(pHandle);
+ 274:Core/Src/FOC_Driver.c ****     FOC_Direct_Current_Control_q(pHandle);
+ 275:Core/Src/FOC_Driver.c **** 
+ 276:Core/Src/FOC_Driver.c ****     // 5. Ters Dönüşüm (Inverse Park) -> (u_d, u_q) to (u_alpha, u_beta)
+ 277:Core/Src/FOC_Driver.c ****     FOC_Inverse_Clark_Park_Transform(pHandle);
+ 278:Core/Src/FOC_Driver.c **** 
+ 279:Core/Src/FOC_Driver.c ****     // 6. PWM Duty Hesapla (SVPWM)
+ 280:Core/Src/FOC_Driver.c ****     FOC_SVPWM_Calculation(pHandle);
+ 281:Core/Src/FOC_Driver.c **** }
+ 1123              		.loc 1 281 1 is_stmt 0 view .LVU397
+ 1124 001c 10BD     		pop	{r4, pc}
+ 1125              	.LVL104:
+ 1126              	.L91:
+ 263:Core/Src/FOC_Driver.c **** 
+ 1127              		.loc 1 263 5 is_stmt 1 view .LVU398
+ 1128 001e FFF7FEFF 		bl	FOC_Clark_Park_Transform
+ 1129              	.LVL105:
+ 266:Core/Src/FOC_Driver.c **** 
+ 1130              		.loc 1 266 5 view .LVU399
+ 1131 0022 2046     		mov	r0, r4
+ 1132 0024 FFF7FEFF 		bl	FOC_Torq_Reference_Transform
+ 1133              	.LVL106:
+ 269:Core/Src/FOC_Driver.c ****     FOC_Voltage_Decoupling(pHandle);
+ 1134              		.loc 1 269 5 view .LVU400
+ 1135 0028 2046     		mov	r0, r4
+ 1136 002a FFF7FEFF 		bl	FOC_Max_Voltage
+ 1137              	.LVL107:
+ 270:Core/Src/FOC_Driver.c **** 
+ 1138              		.loc 1 270 5 view .LVU401
+ 1139 002e 2046     		mov	r0, r4
+ARM GAS  /tmp/cchbRFak.s 			page 27
+
+
+ 1140 0030 FFF7FEFF 		bl	FOC_Voltage_Decoupling
+ 1141              	.LVL108:
+ 273:Core/Src/FOC_Driver.c ****     FOC_Direct_Current_Control_q(pHandle);
+ 1142              		.loc 1 273 5 view .LVU402
+ 1143 0034 2046     		mov	r0, r4
+ 1144 0036 FFF7FEFF 		bl	FOC_Direct_Current_Control_d
+ 1145              	.LVL109:
+ 274:Core/Src/FOC_Driver.c **** 
+ 1146              		.loc 1 274 5 view .LVU403
+ 1147 003a 2046     		mov	r0, r4
+ 1148 003c FFF7FEFF 		bl	FOC_Direct_Current_Control_q
+ 1149              	.LVL110:
+ 277:Core/Src/FOC_Driver.c **** 
+ 1150              		.loc 1 277 5 view .LVU404
+ 1151 0040 2046     		mov	r0, r4
+ 1152 0042 FFF7FEFF 		bl	FOC_Inverse_Clark_Park_Transform
+ 1153              	.LVL111:
+ 280:Core/Src/FOC_Driver.c **** }
+ 1154              		.loc 1 280 5 view .LVU405
+ 1155 0046 2046     		mov	r0, r4
+ 1156 0048 FFF7FEFF 		bl	FOC_SVPWM_Calculation
+ 1157              	.LVL112:
+ 1158 004c E6E7     		b	.L90
+ 1159              		.cfi_endproc
+ 1160              	.LFE170:
+ 1162              		.text
+ 1163              	.Letext0:
+ 1164              		.file 2 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+ 1165              		.file 3 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h"
+ 1166              		.file 4 "Core/Inc/FOC_Driver.h"
+ 1167              		.file 5 "/usr/include/newlib/math.h"
+ARM GAS  /tmp/cchbRFak.s 			page 28
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 FOC_Driver.c
+     /tmp/cchbRFak.s:21     .text.FOC_Driver_Init:00000000 $t
+     /tmp/cchbRFak.s:27     .text.FOC_Driver_Init:00000000 FOC_Driver_Init
+     /tmp/cchbRFak.s:123    .text.FOC_Torq_Reference_Transform:00000000 $t
+     /tmp/cchbRFak.s:129    .text.FOC_Torq_Reference_Transform:00000000 FOC_Torq_Reference_Transform
+     /tmp/cchbRFak.s:205    .text.FOC_Voltage_Decoupling:00000000 $t
+     /tmp/cchbRFak.s:211    .text.FOC_Voltage_Decoupling:00000000 FOC_Voltage_Decoupling
+     /tmp/cchbRFak.s:267    .text.FOC_Max_Voltage:00000000 $t
+     /tmp/cchbRFak.s:273    .text.FOC_Max_Voltage:00000000 FOC_Max_Voltage
+     /tmp/cchbRFak.s:294    .text.FOC_Max_Voltage:00000014 $d
+     /tmp/cchbRFak.s:299    .text.FOC_Direct_Current_Control_d:00000000 $t
+     /tmp/cchbRFak.s:305    .text.FOC_Direct_Current_Control_d:00000000 FOC_Direct_Current_Control_d
+     /tmp/cchbRFak.s:415    .text.FOC_Direct_Current_Control_q:00000000 $t
+     /tmp/cchbRFak.s:421    .text.FOC_Direct_Current_Control_q:00000000 FOC_Direct_Current_Control_q
+     /tmp/cchbRFak.s:581    .text.FOC_Direct_Current_Control_q:000000bc $d
+     /tmp/cchbRFak.s:586    .text.FOC_SVPWM_Calculation:00000000 $t
+     /tmp/cchbRFak.s:592    .text.FOC_SVPWM_Calculation:00000000 FOC_SVPWM_Calculation
+     /tmp/cchbRFak.s:805    .text.FOC_SVPWM_Calculation:0000012c $d
+     /tmp/cchbRFak.s:810    .text.FOC_G4_Cos_Sin_Calculate:00000000 $t
+     /tmp/cchbRFak.s:816    .text.FOC_G4_Cos_Sin_Calculate:00000000 FOC_G4_Cos_Sin_Calculate
+     /tmp/cchbRFak.s:897    .text.FOC_G4_Cos_Sin_Calculate:00000068 $d
+     /tmp/cchbRFak.s:907    .text.FOC_Clark_Park_Transform:00000000 $t
+     /tmp/cchbRFak.s:913    .text.FOC_Clark_Park_Transform:00000000 FOC_Clark_Park_Transform
+     /tmp/cchbRFak.s:996    .text.FOC_Clark_Park_Transform:00000068 $d
+     /tmp/cchbRFak.s:1001   .text.FOC_Inverse_Clark_Park_Transform:00000000 $t
+     /tmp/cchbRFak.s:1007   .text.FOC_Inverse_Clark_Park_Transform:00000000 FOC_Inverse_Clark_Park_Transform
+     /tmp/cchbRFak.s:1080   .text.FOC_Current_Controller:00000000 $t
+     /tmp/cchbRFak.s:1086   .text.FOC_Current_Controller:00000000 FOC_Current_Controller
+
+UNDEFINED SYMBOLS
+sqrtf

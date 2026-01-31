@@ -1,0 +1,188 @@
+ARM GAS  /tmp/ccV7dQzv.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"stm32g4xx_hal_msp.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/stm32g4xx_hal_msp.c"
+  20              		.section	.text.HAL_MspInit,"ax",%progbits
+  21              		.align	1
+  22              		.global	HAL_MspInit
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	HAL_MspInit:
+  28              	.LFB132:
+   1:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/stm32g4xx_hal_msp.c **** /**
+   3:Core/Src/stm32g4xx_hal_msp.c ****   ******************************************************************************
+   4:Core/Src/stm32g4xx_hal_msp.c ****   * @file         stm32g4xx_hal_msp.c
+   5:Core/Src/stm32g4xx_hal_msp.c ****   * @brief        This file provides code for the MSP Initialization
+   6:Core/Src/stm32g4xx_hal_msp.c ****   *               and de-Initialization codes.
+   7:Core/Src/stm32g4xx_hal_msp.c ****   ******************************************************************************
+   8:Core/Src/stm32g4xx_hal_msp.c ****   * @attention
+   9:Core/Src/stm32g4xx_hal_msp.c ****   *
+  10:Core/Src/stm32g4xx_hal_msp.c ****   * Copyright (c) 2026 STMicroelectronics.
+  11:Core/Src/stm32g4xx_hal_msp.c ****   * All rights reserved.
+  12:Core/Src/stm32g4xx_hal_msp.c ****   *
+  13:Core/Src/stm32g4xx_hal_msp.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Core/Src/stm32g4xx_hal_msp.c ****   * in the root directory of this software component.
+  15:Core/Src/stm32g4xx_hal_msp.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Core/Src/stm32g4xx_hal_msp.c ****   *
+  17:Core/Src/stm32g4xx_hal_msp.c ****   ******************************************************************************
+  18:Core/Src/stm32g4xx_hal_msp.c ****   */
+  19:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END Header */
+  20:Core/Src/stm32g4xx_hal_msp.c **** 
+  21:Core/Src/stm32g4xx_hal_msp.c **** /* Includes ------------------------------------------------------------------*/
+  22:Core/Src/stm32g4xx_hal_msp.c **** #include "main.h"
+  23:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN Includes */
+  24:Core/Src/stm32g4xx_hal_msp.c **** 
+  25:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END Includes */
+  26:Core/Src/stm32g4xx_hal_msp.c **** 
+  27:Core/Src/stm32g4xx_hal_msp.c **** /* Private typedef -----------------------------------------------------------*/
+  28:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN TD */
+  29:Core/Src/stm32g4xx_hal_msp.c **** 
+  30:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END TD */
+ARM GAS  /tmp/ccV7dQzv.s 			page 2
+
+
+  31:Core/Src/stm32g4xx_hal_msp.c **** 
+  32:Core/Src/stm32g4xx_hal_msp.c **** /* Private define ------------------------------------------------------------*/
+  33:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN Define */
+  34:Core/Src/stm32g4xx_hal_msp.c **** 
+  35:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END Define */
+  36:Core/Src/stm32g4xx_hal_msp.c **** 
+  37:Core/Src/stm32g4xx_hal_msp.c **** /* Private macro -------------------------------------------------------------*/
+  38:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN Macro */
+  39:Core/Src/stm32g4xx_hal_msp.c **** 
+  40:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END Macro */
+  41:Core/Src/stm32g4xx_hal_msp.c **** 
+  42:Core/Src/stm32g4xx_hal_msp.c **** /* Private variables ---------------------------------------------------------*/
+  43:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN PV */
+  44:Core/Src/stm32g4xx_hal_msp.c **** 
+  45:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END PV */
+  46:Core/Src/stm32g4xx_hal_msp.c **** 
+  47:Core/Src/stm32g4xx_hal_msp.c **** /* Private function prototypes -----------------------------------------------*/
+  48:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN PFP */
+  49:Core/Src/stm32g4xx_hal_msp.c **** 
+  50:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END PFP */
+  51:Core/Src/stm32g4xx_hal_msp.c **** 
+  52:Core/Src/stm32g4xx_hal_msp.c **** /* External functions --------------------------------------------------------*/
+  53:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN ExternalFunctions */
+  54:Core/Src/stm32g4xx_hal_msp.c **** 
+  55:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END ExternalFunctions */
+  56:Core/Src/stm32g4xx_hal_msp.c **** 
+  57:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE BEGIN 0 */
+  58:Core/Src/stm32g4xx_hal_msp.c **** 
+  59:Core/Src/stm32g4xx_hal_msp.c **** /* USER CODE END 0 */
+  60:Core/Src/stm32g4xx_hal_msp.c **** /**
+  61:Core/Src/stm32g4xx_hal_msp.c ****   * Initializes the Global MSP.
+  62:Core/Src/stm32g4xx_hal_msp.c ****   */
+  63:Core/Src/stm32g4xx_hal_msp.c **** void HAL_MspInit(void)
+  64:Core/Src/stm32g4xx_hal_msp.c **** {
+  29              		.loc 1 64 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 00B5     		push	{lr}
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 14, -4
+  36 0002 83B0     		sub	sp, sp, #12
+  37              		.cfi_def_cfa_offset 16
+  65:Core/Src/stm32g4xx_hal_msp.c **** 
+  66:Core/Src/stm32g4xx_hal_msp.c ****   /* USER CODE BEGIN MspInit 0 */
+  67:Core/Src/stm32g4xx_hal_msp.c **** 
+  68:Core/Src/stm32g4xx_hal_msp.c ****   /* USER CODE END MspInit 0 */
+  69:Core/Src/stm32g4xx_hal_msp.c **** 
+  70:Core/Src/stm32g4xx_hal_msp.c ****   __HAL_RCC_SYSCFG_CLK_ENABLE();
+  38              		.loc 1 70 3 view .LVU1
+  39              	.LBB2:
+  40              		.loc 1 70 3 view .LVU2
+  41              		.loc 1 70 3 view .LVU3
+  42 0004 0B4B     		ldr	r3, .L3
+  43 0006 1A6E     		ldr	r2, [r3, #96]
+  44 0008 42F00102 		orr	r2, r2, #1
+  45 000c 1A66     		str	r2, [r3, #96]
+ARM GAS  /tmp/ccV7dQzv.s 			page 3
+
+
+  46              		.loc 1 70 3 view .LVU4
+  47 000e 1A6E     		ldr	r2, [r3, #96]
+  48 0010 02F00102 		and	r2, r2, #1
+  49 0014 0092     		str	r2, [sp]
+  50              		.loc 1 70 3 view .LVU5
+  51 0016 009A     		ldr	r2, [sp]
+  52              	.LBE2:
+  53              		.loc 1 70 3 view .LVU6
+  71:Core/Src/stm32g4xx_hal_msp.c ****   __HAL_RCC_PWR_CLK_ENABLE();
+  54              		.loc 1 71 3 view .LVU7
+  55              	.LBB3:
+  56              		.loc 1 71 3 view .LVU8
+  57              		.loc 1 71 3 view .LVU9
+  58 0018 9A6D     		ldr	r2, [r3, #88]
+  59 001a 42F08052 		orr	r2, r2, #268435456
+  60 001e 9A65     		str	r2, [r3, #88]
+  61              		.loc 1 71 3 view .LVU10
+  62 0020 9B6D     		ldr	r3, [r3, #88]
+  63 0022 03F08053 		and	r3, r3, #268435456
+  64 0026 0193     		str	r3, [sp, #4]
+  65              		.loc 1 71 3 view .LVU11
+  66 0028 019B     		ldr	r3, [sp, #4]
+  67              	.LBE3:
+  68              		.loc 1 71 3 view .LVU12
+  72:Core/Src/stm32g4xx_hal_msp.c **** 
+  73:Core/Src/stm32g4xx_hal_msp.c ****   /* System interrupt init*/
+  74:Core/Src/stm32g4xx_hal_msp.c **** 
+  75:Core/Src/stm32g4xx_hal_msp.c ****   /** Disable the internal Pull-Up in Dead Battery pins of UCPD peripheral
+  76:Core/Src/stm32g4xx_hal_msp.c ****   */
+  77:Core/Src/stm32g4xx_hal_msp.c ****   HAL_PWREx_DisableUCPDDeadBattery();
+  69              		.loc 1 77 3 view .LVU13
+  70 002a FFF7FEFF 		bl	HAL_PWREx_DisableUCPDDeadBattery
+  71              	.LVL0:
+  78:Core/Src/stm32g4xx_hal_msp.c **** 
+  79:Core/Src/stm32g4xx_hal_msp.c ****   /* USER CODE BEGIN MspInit 1 */
+  80:Core/Src/stm32g4xx_hal_msp.c **** 
+  81:Core/Src/stm32g4xx_hal_msp.c ****   /* USER CODE END MspInit 1 */
+  82:Core/Src/stm32g4xx_hal_msp.c **** }
+  72              		.loc 1 82 1 is_stmt 0 view .LVU14
+  73 002e 03B0     		add	sp, sp, #12
+  74              		.cfi_def_cfa_offset 4
+  75              		@ sp needed
+  76 0030 5DF804FB 		ldr	pc, [sp], #4
+  77              	.L4:
+  78              		.align	2
+  79              	.L3:
+  80 0034 00100240 		.word	1073876992
+  81              		.cfi_endproc
+  82              	.LFE132:
+  84              		.text
+  85              	.Letext0:
+  86              		.file 2 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h"
+  87              		.file 3 "/usr/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h"
+  88              		.file 4 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h"
+ARM GAS  /tmp/ccV7dQzv.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 stm32g4xx_hal_msp.c
+     /tmp/ccV7dQzv.s:21     .text.HAL_MspInit:00000000 $t
+     /tmp/ccV7dQzv.s:27     .text.HAL_MspInit:00000000 HAL_MspInit
+     /tmp/ccV7dQzv.s:80     .text.HAL_MspInit:00000034 $d
+
+UNDEFINED SYMBOLS
+HAL_PWREx_DisableUCPDDeadBattery
