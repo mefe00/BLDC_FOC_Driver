@@ -1,0 +1,6 @@
+/home/mefe/Desktop/Rover_Embedded_Software/BLDC_FOC/build/Release/CMakeFiles/BLDC_FOC.dir
+/home/mefe/Desktop/Rover_Embedded_Software/BLDC_FOC/build/Release/CMakeFiles/edit_cache.dir
+/home/mefe/Desktop/Rover_Embedded_Software/BLDC_FOC/build/Release/CMakeFiles/rebuild_cache.dir
+/home/mefe/Desktop/Rover_Embedded_Software/BLDC_FOC/build/Release/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir
+/home/mefe/Desktop/Rover_Embedded_Software/BLDC_FOC/build/Release/cmake/stm32cubemx/CMakeFiles/edit_cache.dir
+/home/mefe/Desktop/Rover_Embedded_Software/BLDC_FOC/build/Release/cmake/stm32cubemx/CMakeFiles/rebuild_cache.dir
